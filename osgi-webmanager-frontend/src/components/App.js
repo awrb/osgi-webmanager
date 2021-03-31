@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "../reducers";
 import thunkMiddleware from "redux-thunk";
+import connectToStomp from "../StompClient";
 
 const theme = {
   ...createMuiTheme(),
@@ -19,7 +20,9 @@ const theme = {
 
 const composed = compose(applyMiddleware(thunkMiddleware));
 
-const store = createStore(rootReducer, composed);
+export const store = createStore(rootReducer, composed);
+
+connectToStomp();
 
 const App = () => {
   return (

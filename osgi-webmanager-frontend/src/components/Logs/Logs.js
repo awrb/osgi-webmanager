@@ -151,7 +151,6 @@ export const Logs = () => {
         handleSubmit={(message, level) => {
           dispatch(publishLog({ message, level }));
           setLogModalOpen(false);
-          dispatch(fetchLogs());
         }}
       />
       <FilterLogsModal

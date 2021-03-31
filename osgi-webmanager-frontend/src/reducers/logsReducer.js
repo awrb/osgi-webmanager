@@ -1,4 +1,8 @@
-import { FETCH_LOGS_DONE, FETCH_LOGS_PROGRESS } from "../actions/actions";
+import {
+  FETCH_LOGS_DONE,
+  FETCH_LOGS_PROGRESS,
+  LOG_ADDED,
+} from "../actions/actions";
 
 const initialState = {
   logs: [],
@@ -17,6 +21,11 @@ const logsReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         logs: action.payload,
+      };
+    case LOG_ADDED:
+      return {
+        ...state,
+        logs: [...state.logs, action.payload.payload],
       };
     default:
       return state;

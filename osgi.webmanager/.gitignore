@@ -1,0 +1,4 @@
+*.iml
+target/*
+../osgi.webmanager/.idea
+lib/
