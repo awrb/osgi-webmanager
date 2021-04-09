@@ -1,6 +1,5 @@
 package com.github.awrb.osgi.webmanager.bundle.representation.enums;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.osgi.framework.Bundle;
 
 import java.util.HashMap;
@@ -13,7 +12,8 @@ public enum BundleStateEnum {
     ACTIVE(Bundle.ACTIVE),
     RESOLVED(Bundle.RESOLVED),
     STARTING(Bundle.STARTING),
-    STOPPING(Bundle.STOPPING);
+    STOPPING(Bundle.STOPPING),
+    ALL(Constants.ALL_BUNDLES);
 
     private static final Map<Integer, BundleStateEnum> lookup = new HashMap<>();
 
@@ -41,5 +41,9 @@ public enum BundleStateEnum {
 
     public String getState() {
         return this.name();
+    }
+
+    private static class Constants {
+        private static final int ALL_BUNDLES = 0;
     }
 }

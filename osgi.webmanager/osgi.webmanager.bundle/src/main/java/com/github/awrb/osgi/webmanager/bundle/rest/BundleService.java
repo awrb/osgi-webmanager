@@ -8,6 +8,7 @@ import com.github.awrb.osgi.webmanager.core.utils.TimeConverter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
 import org.osgi.framework.startlevel.BundleStartLevel;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.log.LogService;
@@ -47,8 +48,12 @@ public class BundleService {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BundleRepresentation> getBundleRepresentations() {
+    public List<BundleRepresentation> getBundleRepresentations(@DefaultValue("") @QueryParam("name") String name,
+                                                               @QueryParam("id") Long id, @DefaultValue("ALL") @QueryParam("state") BundleStateEnum bundleStateEnum) {
         return Stream.of(bundleContext.getBundles())
+                .filter(bundle -> bundle.getHeaders().get(Constants.BUNDLE_NAME).contains(name))
+                .filter(bundle -> id == null || bundle.getBundleId() == id)
+                .filter(bundle -> bundleStateEnum == BundleStateEnum.ALL || bundleStateEnum == BundleStateEnum.get(bundle.getState()))
                 .map(this::createBundleRepresentation)
                 .collect(toList());
     }

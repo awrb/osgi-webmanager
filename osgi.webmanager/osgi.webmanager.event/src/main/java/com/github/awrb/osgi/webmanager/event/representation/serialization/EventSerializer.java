@@ -33,6 +33,5 @@ public class EventSerializer extends JsonSerializer<Event> {
         }
 
         jsonGenerator.writeEndObject();
-        jsonGenerator.close();
     }
 }

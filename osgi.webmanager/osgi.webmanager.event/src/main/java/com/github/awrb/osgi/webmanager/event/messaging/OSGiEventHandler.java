@@ -3,11 +3,7 @@ package com.github.awrb.osgi.webmanager.event.messaging;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.awrb.osgi.webmanager.core.JsonProvider;
-import com.github.awrb.osgi.webmanager.core.messaging.MessageHandler;
-import com.github.awrb.osgi.webmanager.core.messaging.ClientQueryCouple;
-import com.github.awrb.osgi.webmanager.core.messaging.JsonConstants;
-import com.github.awrb.osgi.webmanager.core.messaging.MessageHandlerBase;
-import com.github.awrb.osgi.webmanager.core.messaging.QueryProcessor;
+import com.github.awrb.osgi.webmanager.core.messaging.*;
 import com.github.awrb.osgi.webmanager.core.messaging.enums.MessageTypeEnum;
 import com.github.awrb.osgi.webmanager.event.representation.mixins.EventMixin;
 import com.github.awrb.osgi.webmanager.event.representation.serialization.JsonMapper;
@@ -16,11 +12,9 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
-import org.osgi.service.log.LogService;
 
 import javax.jms.Session;
 import java.util.Dictionary;
@@ -37,9 +31,6 @@ public class OSGiEventHandler extends MessageHandlerBase<Event> implements Messa
     private BundleContext bundleContext;
 
     private Map<ClientQueryCouple, ServiceRegistration<EventHandler>> subscriptions;
-
-    @Reference
-    private LogService logService;
 
     @Activate
     private void activate(BundleContext bundleContext) {
@@ -60,28 +51,29 @@ public class OSGiEventHandler extends MessageHandlerBase<Event> implements Messa
         Dictionary<String, Object> properties = new Hashtable<>();
 
         String topic = QueryProcessor.toParams(query).get("topic");
-        if (topic == null) {
-            return null;
-        }
+        properties.put(EventConstants.EVENT_TOPIC, topic == null ? "*" : topic);
 
-        properties.put(EventConstants.EVENT_TOPIC, topic);
         EventHandler eventHandler = this::onMessage;
 
-        ServiceRegistration<EventHandler> registration = bundleContext.
-                registerService(EventHandler.class, eventHandler, properties);
+        ServiceRegistration<EventHandler> registration = bundleContext.registerService(
+                EventHandler.class, eventHandler, properties);
 
         ClientQueryCouple clientQueryCouple = super.subscribe(clientId, query, session);
         subscriptions.put(clientQueryCouple, registration);
+
         return clientQueryCouple;
     }
 
     @Override
     public synchronized ClientQueryCouple unsubscribe(String clientId, String query) {
         ClientQueryCouple clientQueryCouple = super.unsubscribe(clientId, query);
-        if (clientQueryCouple != null) {
-            subscriptions.get(clientQueryCouple).unregister();
-            subscriptions.remove(clientQueryCouple);
+
+        ServiceRegistration<EventHandler> registration = subscriptions.get(clientQueryCouple);
+        if (registration != null) {
+            registration.unregister();
         }
+        subscriptions.remove(clientQueryCouple);
+
         return clientQueryCouple;
     }
 
@@ -94,8 +86,10 @@ public class OSGiEventHandler extends MessageHandlerBase<Event> implements Messa
     @Override
     public String process(Event event) {
         ObjectNode root = jsonNodeFactory.objectNode();
+
         root.put(JsonConstants.TYPE, MessageTypeEnum.EVENT.name());
         root.set(JsonConstants.PAYLOAD, JsonMapper.serialize(event));
+
         return root.toString();
     }
 }

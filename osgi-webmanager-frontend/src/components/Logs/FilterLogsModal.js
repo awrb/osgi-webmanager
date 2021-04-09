@@ -13,11 +13,15 @@ import {
   Select,
 } from "@material-ui/core";
 import { LOG_TYPES } from "../../utils/constants";
+import { useSelector } from "react-redux";
 
 const FilterLogsModal = ({ open, handleClose, handleSubmit }) => {
-  const [text, setText] = useState("");
-  const [type, setType] = useState(LOG_TYPES.INFO);
-  const [exceptionsOnly, setExceptionsOnly] = useState(false);
+  const preferences = useSelector((state) => state.logs.preferences);
+  const [text, setText] = useState(preferences.filter);
+  const [type, setType] = useState(preferences.level);
+  const [exceptionsOnly, setExceptionsOnly] = useState(
+    preferences.exceptionsOnly
+  );
 
   return (
     <Dialog

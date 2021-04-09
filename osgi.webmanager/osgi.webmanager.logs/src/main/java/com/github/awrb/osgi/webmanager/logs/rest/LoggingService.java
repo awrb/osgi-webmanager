@@ -56,6 +56,9 @@ public class LoggingService {
     }
 
     private boolean safeContains(LogEntry logEntry, String filter) {
-        return logEntry != null && logEntry.getMessage() != null && logEntry.getMessage().contains(filter);
+
+        return logEntry != null
+                && logEntry.getMessage() != null
+                && logEntry.getMessage().toLowerCase().contains(filter.toLowerCase());
     }
 }

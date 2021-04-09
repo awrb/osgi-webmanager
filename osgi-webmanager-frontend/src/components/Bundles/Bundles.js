@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -14,11 +14,18 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-
-import { fetchBundles } from "../../actions/bundles";
+import { FilterList } from "@material-ui/icons";
+import {
+  fetchBundles,
+  stopBundle,
+  startBundle,
+  setPreferences,
+  createParams,
+} from "../../actions/bundles";
 
 import { useDispatch, useSelector } from "react-redux";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Menu, MenuItem } from "@material-ui/core";
+import FilterBundlesModal from "./FilterBundlesModal";
 
 const useRowStyles = makeStyles({
   root: {
@@ -42,11 +49,34 @@ const useTableStyles = makeStyles({
 const Row = (props) => {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const dispatch = useDispatch();
+
   const classes = useRowStyles();
+
+  const handleClose = () => setAnchorEl(null);
 
   return (
     <React.Fragment>
-      <TableRow className={classes.root}>
+      <TableRow
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setAnchorEl(e.currentTarget);
+        }}
+        className={classes.root}
+      >
+        <Menu
+          id="bundle-menu"
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => dispatch(stopBundle(row.id))}>Stop</MenuItem>
+          <MenuItem onClick={() => dispatch(startBundle(row.id))}>
+            Start
+          </MenuItem>
+          <MenuItem>Update</MenuItem>
+        </Menu>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -113,12 +143,12 @@ const Cell = ({ label, alignRight }) => (
 export const Bundles = () => {
   const classes = useTableStyles();
   const columns = ["Id", "Name", "State", "Last Modified", "Description"];
-
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
   const dispatch = useDispatch();
   const bundlesData = useSelector((state) => state.bundles);
 
   useEffect(() => {
-    dispatch(fetchBundles);
+    dispatch(fetchBundles(bundlesData.preferences));
   }, []);
 
   if (bundlesData.loading) {
@@ -126,26 +156,50 @@ export const Bundles = () => {
   }
 
   return (
-    <TableContainer className={classes.root} component={Paper}>
-      <Typography className={classes.title} variant="h4">
-        Bundles
-      </Typography>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            {columns.map((column, idx) => (
-              <Cell label={column} alignRight={idx > 0} />
+    <React.Fragment>
+      <FilterBundlesModal
+        open={filterModalOpen}
+        handleClose={() => setFilterModalOpen(false)}
+        handleSubmit={(name, state, id) => {
+          setFilterModalOpen(false);
+          const params = createParams(name, id, state);
+          dispatch(fetchBundles(params));
+          dispatch(setPreferences(params));
+        }}
+      />
+      <TableContainer className={classes.root} component={Paper}>
+        <Box display="flex">
+          <Box width="100%">
+            <Typography className={classes.title} variant="h4">
+              Bundles
+            </Typography>
+          </Box>
+          <Box marginRight={4} flexShrink={1}>
+            <IconButton>
+              <FilterList
+                onClick={() => setFilterModalOpen(!filterModalOpen)}
+                fontSize="large"
+              />
+            </IconButton>
+          </Box>
+        </Box>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              {columns.map((column, idx) => (
+                <Cell label={column} alignRight={idx > 0} />
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {bundlesData.bundles.map((row) => (
+              <Row key={row.id} row={row} />
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {bundlesData.bundles.map((row) => (
-            <Row key={row.id} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </React.Fragment>
   );
 };
 

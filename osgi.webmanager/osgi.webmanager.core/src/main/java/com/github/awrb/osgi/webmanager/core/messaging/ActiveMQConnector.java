@@ -74,6 +74,7 @@ public class ActiveMQConnector {
 
     private void createConsumerForTopic(ActiveMQDestination topic, String clientId) {
         String topicName = topic.getPhysicalName();
+
         Optional<MessageHandler> handlerOptional = registry.getHandlerForJmsTopic(topicName);
         try {
             Session session = createSession();

@@ -1,5 +1,5 @@
 import { Stomp } from "@stomp/stompjs";
-import { LOG_ADDED } from "./actions/actions";
+import { LOG_ADDED, EVENT_ADDED } from "./actions/actions";
 import { store } from "./components/App";
 
 const connectToStomp = () => {
@@ -19,6 +19,14 @@ const connectToStomp = () => {
     client.subscribe("/topic/logs", (data) => {
       store.dispatch({
         type: LOG_ADDED,
+        payload: JSON.parse(decoder.decode(data.binaryBody)),
+      });
+    });
+
+    client.subscribe("/topic/events", (data) => {
+      console.log(data);
+      store.dispatch({
+        type: EVENT_ADDED,
         payload: JSON.parse(decoder.decode(data.binaryBody)),
       });
     });

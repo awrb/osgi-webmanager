@@ -4,6 +4,7 @@ import {
   FETCH_LOGS_PROGRESS,
   PUBLISH_LOG_DONE,
   PUBLISH_LOG_PROGRESS,
+  SET_LOG_PREFERENCES,
 } from "./actions";
 import { LOG_TYPES } from "../utils/constants";
 
@@ -11,7 +12,7 @@ export const createParams = (limit, filter, level, exceptionsOnly) => {
   return { limit, filter, level, exceptionsOnly };
 };
 
-const defaultGetParams = createParams(100, "", LOG_TYPES.ALL, false);
+export const defaultGetParams = createParams(100, "", LOG_TYPES.ALL, false);
 
 export const fetchLogs = (params = defaultGetParams) => async (dispatch) => {
   dispatch({ type: FETCH_LOGS_PROGRESS });
@@ -23,4 +24,8 @@ export const publishLog = (data) => async (dispatch) => {
   dispatch({ type: PUBLISH_LOG_PROGRESS });
   const response = await LogsAPI.post("/", data);
   dispatch({ type: PUBLISH_LOG_DONE, payload: response.data });
+};
+
+export const setPreferences = (preferences) => (dispatch) => {
+  dispatch({ type: SET_LOG_PREFERENCES, payload: preferences });
 };

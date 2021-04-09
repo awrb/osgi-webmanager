@@ -18,6 +18,10 @@ public class QueryProcessor {
     public static Map<String, String> toParams(String query) {
         final Map<String, String> result = new HashMap<>();
 
+        if (query == null) {
+            return result;
+        }
+
         if (!query.contains(FIRST_PARAM_KEY)) {
             return result;
         }

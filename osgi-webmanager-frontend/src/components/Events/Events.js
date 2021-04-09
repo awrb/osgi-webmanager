@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchLogs,
-  publishLog,
-  createParams,
-  setPreferences,
-} from "../../actions/logs";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -18,11 +12,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import { CircularProgress, IconButton } from "@material-ui/core";
-import { Add, FilterList } from "@material-ui/icons";
-import AddLogModal from "./AddLogModal";
-import FilterLogsModal from "./FilterLogsModal";
-import { LOG_TYPES } from "../../utils/constants";
-import { theme } from "../App";
+import { Add } from "@material-ui/icons";
+import AddEventModal from "./AddEventModal";
 
 const useRowStyles = makeStyles({
   root: {
@@ -46,51 +37,26 @@ const useTableStyles = makeStyles({
   },
 });
 
-const mapLogLevelToColor = (level) => {
-  switch (level) {
-    case LOG_TYPES.ERROR:
-      return theme.alarm;
-    case LOG_TYPES.WARNING:
-      return theme.warning;
-    default:
-      return "#000";
-  }
-};
-
 const Row = (props) => {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
-
-  const color = mapLogLevelToColor(row.level);
 
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
         <TableCell></TableCell>
         <TableCell component="th" scope="row">
-          {row.bundleId}
-        </TableCell>
-        <TableCell align="right">
-          <Typography>{row.bundleName}</Typography>
-        </TableCell>
-        <TableCell align="right">
-          <Typography>{row.level}</Typography>
+          {row.topic}
         </TableCell>
         <TableCell align="right">
           <Typography>{row.timestamp}</Typography>
-        </TableCell>
-        <TableCell align="right">
-          <Typography style={{ color }}>{row.message}</Typography>
-        </TableCell>
-        <TableCell style={{ color }} align="right">
-          {row.exception}
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell
           style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={7}
+          colSpan={3}
         ></TableCell>
       </TableRow>
     </React.Fragment>
@@ -121,88 +87,36 @@ const Cell = ({ label, alignRight }) => (
   </TableCell>
 );
 
-export const Logs = () => {
+export const Events = () => {
   const classes = useTableStyles();
-  const [logModalOpen, setLogModalOpen] = useState(false);
-  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [addEventModalOpen, setAddEventModalOpen] = useState(false);
 
-  const columns = [
-    "Bundle Id",
-    "Bundle Name",
-    "Level",
-    "Timestamp",
-    "Text",
-    "Exception",
-  ];
+  const columns = ["Topic", "Timestamp"];
 
   const createColumns = () =>
-    logsData.logs
-      .map((logEntry) => ({
-        bundleId: logEntry.bundle.bundleId,
-        bundleName: logEntry.bundle.name,
-        exception: logEntry.exception,
-        level: logEntry.level,
-        message: logEntry.message,
-        timestamp: logEntry.timestamp,
-      }))
-      .sort((log1, log2) =>
-        log1.timestamp < log2.timestamp
-          ? 1
-          : log1.timestamp > log2.timestamp
-          ? -1
-          : 0
-      );
+    eventsData.events.sort((e1, e2) =>
+      e1.timestamp < e2.timestamp ? 1 : e1.timestamp > e2.timestamp ? -1 : 0
+    );
 
-  const dispatch = useDispatch();
-  const logsData = useSelector((state) => state.logs);
-
-  useEffect(() => {
-    dispatch(fetchLogs(logsData.preferences));
-  }, []);
-
-  if (logsData.loading) {
-    return <CircularProgress />;
-  }
+  const eventsData = useSelector((state) => state.events);
 
   return (
     <React.Fragment>
-      <AddLogModal
-        open={logModalOpen}
-        handleClose={() => setLogModalOpen(false)}
-        handleSubmit={(message, level) => {
-          dispatch(publishLog({ message, level }));
-          setLogModalOpen(false);
-        }}
-      />
-      <FilterLogsModal
-        open={filterModalOpen}
-        handleClose={() => setFilterModalOpen(false)}
-        handleSubmit={(message, logLevel, exceptionsOnly) => {
-          setFilterModalOpen(false);
-          const params = createParams(10, message, logLevel, exceptionsOnly);
-          dispatch(fetchLogs(params));
-          dispatch(setPreferences(params));
-        }}
+      <AddEventModal
+        open={addEventModalOpen}
+        handleClose={() => setAddEventModalOpen(false)}
       />
       <TableContainer className={classes.root} component={Paper}>
         <Box display="flex">
           <Box width="100%">
             <Typography className={classes.title} variant="h4">
-              Logs
+              Events
             </Typography>
-          </Box>
-          <Box marginRight={4} flexShrink={1}>
-            <IconButton>
-              <FilterList
-                onClick={() => setFilterModalOpen(!filterModalOpen)}
-                fontSize="large"
-              />
-            </IconButton>
           </Box>
           <Box marginRight={2} flexShrink={0}>
             <IconButton>
               <Add
-                onClick={() => setLogModalOpen(!logModalOpen)}
+                onClick={() => setAddEventModalOpen(!addEventModalOpen)}
                 fontSize="large"
               />
             </IconButton>
@@ -219,7 +133,7 @@ export const Logs = () => {
           </TableHead>
           <TableBody>
             {createColumns().map((row) => (
-              <Row key={row.name} row={row} />
+              <Row key={row} row={row} />
             ))}
           </TableBody>
         </Table>
@@ -228,4 +142,4 @@ export const Logs = () => {
   );
 };
 
-export default Logs;
+export default Events;

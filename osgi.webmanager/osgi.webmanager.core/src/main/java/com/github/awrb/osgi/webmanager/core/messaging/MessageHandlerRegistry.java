@@ -33,7 +33,7 @@ public class MessageHandlerRegistry {
 
             @Override
             public MessageHandler addingService(ServiceReference<MessageHandler> reference) {
-                MessageHandler handler = bundleContext.getService(reference);
+                MessageHandler handler = super.addingService(reference);
                 messageHandlers.add(handler);
                 return handler;
             }
