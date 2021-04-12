@@ -10,11 +10,11 @@ import {
   DISMISS_BUNDLE,
 } from "./actions";
 
-export const createParams = (name, id, state) => {
-  return { name, id, state };
+export const createParams = (name, id, state, modifiedAfter) => {
+  return { name, id, state, modifiedAfter };
 };
 
-export const defaultGetParams = createParams("", null, BUNDLE_STATES.ALL);
+export const defaultGetParams = createParams("", null, BUNDLE_STATES.ALL, "");
 
 export const fetchBundles = (params = defaultGetParams) => async (dispatch) => {
   dispatch({ type: FETCH_BUNDLES_PROGRESS });

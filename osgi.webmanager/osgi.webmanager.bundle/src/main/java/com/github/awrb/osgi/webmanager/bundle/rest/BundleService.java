@@ -18,6 +18,10 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.List;
 import java.util.Optional;
@@ -51,10 +55,15 @@ public class BundleService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<BundleRepresentation> getBundleRepresentations(@DefaultValue("") @QueryParam("name") String name,
-                                                               @QueryParam("id") Long id, @DefaultValue("ALL") @QueryParam("state") BundleStateEnum bundleStateEnum) {
+                                                               @QueryParam("id") Long id,
+                                                               @DefaultValue("ALL") @QueryParam("state") BundleStateEnum bundleStateEnum,
+                                                               @QueryParam("modifiedAfter") String modifiedAfterStr) {
+
+        Date modifiedAfter = parseModifiedAfter(modifiedAfterStr);
         return Stream.of(bundleContext.getBundles())
                 .filter(bundle -> bundle.getHeaders().get(Constants.BUNDLE_NAME).contains(name))
                 .filter(bundle -> id == null || bundle.getBundleId() == id)
+                .filter(bundle -> modifiedAfter == null || modifiedAfter.getTime() >= bundle.getLastModified())
                 .filter(bundle -> bundleStateEnum == BundleStateEnum.ALL || bundleStateEnum == BundleStateEnum.get(bundle.getState()))
                 .map(this::createBundleRepresentation)
                 .collect(toList());
@@ -164,7 +173,6 @@ public class BundleService {
     @Path("/{id}/update")
     public void updateBundle(@PathParam("id") Long id, @FormDataParam("file") InputStream bundle) {
         try {
-            logService.log(LogService.LOG_INFO, bundle.toString());
             getBundleById(id).update(bundle);
         } catch (SecurityException e) {
             throw new WebApplicationException(e, FORBIDDEN);
@@ -188,5 +196,18 @@ public class BundleService {
                 bundle.getLocation(),
                 bundle.getState()
         );
+    }
+
+    private Date parseModifiedAfter(String dateString) {
+        if (dateString == null || dateString.isEmpty()) {
+            return null;
+        }
+
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            return df.parse(dateString);
+        } catch (ParseException e) {
+            throw new WebApplicationException("Date format should be yyyy-MM-dd'T'HH:mm", FORBIDDEN);
+        }
     }
 }

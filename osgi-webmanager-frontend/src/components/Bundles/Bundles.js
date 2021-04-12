@@ -168,9 +168,9 @@ export const Bundles = () => {
       <FilterBundlesModal
         open={filterModalOpen}
         handleClose={() => setFilterModalOpen(false)}
-        handleSubmit={(name, state, id) => {
+        handleSubmit={(name, state, id, modifiedAfter) => {
           setFilterModalOpen(false);
-          const params = createParams(name, id, state);
+          const params = createParams(name, id, state, modifiedAfter);
           dispatch(fetchBundles(params));
           dispatch(setPreferences(params));
         }}

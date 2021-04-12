@@ -14,6 +14,7 @@ const FilterBundlesModal = ({ open, handleClose, handleSubmit }) => {
   const [name, setName] = useState(preferences.name);
   const [bundleState, setBundleState] = useState(preferences.state);
   const [id, setId] = useState(preferences.id);
+  const [modifiedAfter, setModifiedAfter] = useState(preferences.modifiedAfter);
 
   return (
     <Dialog
@@ -55,13 +56,22 @@ const FilterBundlesModal = ({ open, handleClose, handleSubmit }) => {
           type="text"
           fullWidth
         />
+        <TextField
+          autoFocus
+          margin="dense"
+          value={modifiedAfter}
+          onChange={(e) => setModifiedAfter(e.target.value)}
+          label="Modified After"
+          type="datetime-local"
+          fullWidth
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
         <Button
-          onClick={() => handleSubmit(name, bundleState, id)}
+          onClick={() => handleSubmit(name, bundleState, id, modifiedAfter)}
           color="primary"
         >
           Save
