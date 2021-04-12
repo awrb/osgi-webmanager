@@ -4,12 +4,15 @@ import {
   START_BUNDLE,
   STOP_BUNDLE,
   SET_BUNDLE_PREFERENCES,
+  SELECT_BUNDLE,
+  DISMISS_BUNDLE,
 } from "../actions/actions";
 import { BUNDLE_STATES } from "../utils/constants";
 
 const initialState = {
   bundles: [],
   loading: false,
+  selectedBundle: null,
   preferences: {
     name: "",
     state: BUNDLE_STATES.ACTIVE,
@@ -62,6 +65,16 @@ const bundlesReducer = (state = initialState, action) => {
       };
     default:
       return state;
+    case SELECT_BUNDLE:
+      return {
+        ...state,
+        selectedBundle: action.payload,
+      };
+    case DISMISS_BUNDLE:
+      return {
+        ...state,
+        selectedBundle: null,
+      };
   }
 };
 

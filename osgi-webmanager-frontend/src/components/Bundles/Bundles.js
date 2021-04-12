@@ -21,11 +21,15 @@ import {
   startBundle,
   setPreferences,
   createParams,
+  selectBundle,
+  dismissBundle,
+  updateBundle,
 } from "../../actions/bundles";
 
 import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress, Menu, MenuItem } from "@material-ui/core";
 import FilterBundlesModal from "./FilterBundlesModal";
+import UpdateBundleModal from "./UpdateBundleModal";
 
 const useRowStyles = makeStyles({
   root: {
@@ -75,7 +79,9 @@ const Row = (props) => {
           <MenuItem onClick={() => dispatch(startBundle(row.id))}>
             Start
           </MenuItem>
-          <MenuItem>Update</MenuItem>
+          <MenuItem onClick={() => dispatch(selectBundle(row))}>
+            Update
+          </MenuItem>
         </Menu>
         <TableCell>
           <IconButton
@@ -147,6 +153,8 @@ export const Bundles = () => {
   const dispatch = useDispatch();
   const bundlesData = useSelector((state) => state.bundles);
 
+  const { selectedBundle } = bundlesData;
+
   useEffect(() => {
     dispatch(fetchBundles(bundlesData.preferences));
   }, []);
@@ -167,6 +175,16 @@ export const Bundles = () => {
           dispatch(setPreferences(params));
         }}
       />
+      <UpdateBundleModal
+        open={Boolean(selectedBundle)}
+        handleClose={() => dispatch(dismissBundle())}
+        handleSubmit={(file) => {
+          dispatch(updateBundle(selectedBundle.id, file));
+          dispatch(dismissBundle());
+        }}
+        bundleName={selectedBundle && selectedBundle.name}
+      />
+
       <TableContainer className={classes.root} component={Paper}>
         <Box display="flex">
           <Box width="100%">

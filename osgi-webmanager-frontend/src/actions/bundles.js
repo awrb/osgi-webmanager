@@ -6,6 +6,8 @@ import {
   STOP_BUNDLE,
   START_BUNDLE,
   SET_BUNDLE_PREFERENCES,
+  SELECT_BUNDLE,
+  DISMISS_BUNDLE,
 } from "./actions";
 
 export const createParams = (name, id, state) => {
@@ -32,4 +34,22 @@ export const startBundle = (bundleId) => async (dispatch) => {
 
 export const setPreferences = (preferences) => (dispatch) => {
   dispatch({ type: SET_BUNDLE_PREFERENCES, payload: preferences });
+};
+
+export const selectBundle = (bundle) => (dispatch) => {
+  dispatch({ type: SELECT_BUNDLE, payload: bundle });
+};
+
+export const dismissBundle = () => (dispatch) => {
+  dispatch({ type: DISMISS_BUNDLE });
+};
+
+export const updateBundle = (bundleId, bundleFile) => async (dispatch) => {
+  const data = new FormData();
+  data.append("file", bundleFile);
+  const response = await BundlesAPI.put(`${bundleId}/update`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };

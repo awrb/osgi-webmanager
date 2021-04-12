@@ -5,6 +5,7 @@ import com.github.awrb.osgi.webmanager.bundle.representation.BundleStartLevelVal
 import com.github.awrb.osgi.webmanager.bundle.representation.enums.BundleStateEnum;
 import com.github.awrb.osgi.webmanager.core.utils.DictionarySupport;
 import com.github.awrb.osgi.webmanager.core.utils.TimeConverter;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -16,6 +17,7 @@ import org.osgi.service.log.LogService;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.List;
 import java.util.Optional;
@@ -153,6 +155,21 @@ public class BundleService {
             getBundleById(id).adapt(BundleStartLevel.class).setStartLevel(startLevelValue.getStartLevel());
         } catch (SecurityException e) {
             throw new WebApplicationException(e, FORBIDDEN);
+        }
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/{id}/update")
+    public void updateBundle(@PathParam("id") Long id, @FormDataParam("file") InputStream bundle) {
+        try {
+            logService.log(LogService.LOG_INFO, bundle.toString());
+            getBundleById(id).update(bundle);
+        } catch (SecurityException e) {
+            throw new WebApplicationException(e, FORBIDDEN);
+        } catch (BundleException e) {
+            throw new WebApplicationException(e, INTERNAL_SERVER_ERROR);
         }
     }
 

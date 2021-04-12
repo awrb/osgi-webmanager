@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  Typography,
+} from "@material-ui/core";
+import { CloudUpload } from "@material-ui/icons";
 
 const UpdateBundleModal = ({ open, handleClose, handleSubmit, bundleName }) => {
+  const [file, setFile] = useState(null);
+  const handleUpload = ({ target }) => setFile(target.files[0]);
+
   return (
     <Dialog
       fullWidth
@@ -14,12 +22,39 @@ const UpdateBundleModal = ({ open, handleClose, handleSubmit, bundleName }) => {
       aria-labelledby="update-bundle-dialog"
     >
       <DialogTitle id="update-bundle-dialog">{`Update ${bundleName}`}</DialogTitle>
-      <DialogContent></DialogContent>
+      <DialogContent>
+        <DialogContentText>
+          Please select a JAR file that contains the new bundle version.
+        </DialogContentText>
+        <input hidden id="upload" onChange={handleUpload} type="file" />
+        <label htmlFor="upload">
+          <Button
+            variant="contained"
+            startIcon={<CloudUpload />}
+            component="span"
+          >
+            Upload
+          </Button>
+        </label>
+        <Typography>{file && file.name}</Typography>
+      </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button
+          onClick={() => {
+            setFile(null);
+            handleClose();
+          }}
+          color="primary"
+        >
           Cancel
         </Button>
-        <Button onClick={() => handleSubmit(text)} color="primary">
+        <Button
+          onClick={() => {
+            setFile(null);
+            handleSubmit(file);
+          }}
+          color="primary"
+        >
           Update
         </Button>
       </DialogActions>
