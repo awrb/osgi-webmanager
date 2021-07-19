@@ -194,8 +194,8 @@ public class BundleService {
                 bundle.getSymbolicName(),
                 bundle.getVersion().toString(),
                 bundle.getLocation(),
-                bundle.getState()
-        );
+                bundle.getState(),
+                bundle.adapt(BundleStartLevel.class).getStartLevel());
     }
 
     private Date parseModifiedAfter(String dateString) {

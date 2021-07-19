@@ -19,9 +19,10 @@ public class BundleRepresentation {
     private String description;
     private String name;
     private BundleStateEnum state;
+    private int startLevel;
 
     public BundleRepresentation(Map<String, String> headers, long id, String lastModified, String symbolicName,
-                                String version, String location, int state) {
+                                String version, String location, int state, int startLevel) {
         this.headers = headers;
         this.id = id;
         this.lastModified = lastModified;
@@ -31,6 +32,7 @@ public class BundleRepresentation {
         this.state = BundleStateEnum.get(state);
         this.name = headers.get(Constants.BUNDLE_NAME);
         this.description = headers.get(Constants.BUNDLE_DESCRIPTION);
+        this.startLevel = startLevel;
     }
 
     public BundleRepresentation() {
@@ -72,16 +74,23 @@ public class BundleRepresentation {
         return state;
     }
 
+    public int getStartLevel() {
+        return startLevel;
+    }
+
     @Override
     public String toString() {
         return "BundleRepresentation{" +
                 "headers=" + headers +
                 ", id=" + id +
-                ", lastModified=" + lastModified +
+                ", lastModified='" + lastModified + '\'' +
                 ", symbolicName='" + symbolicName + '\'' +
                 ", version='" + version + '\'' +
                 ", location='" + location + '\'' +
                 ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
+                ", state=" + state +
+                ", startLevel=" + startLevel +
                 '}';
     }
 }

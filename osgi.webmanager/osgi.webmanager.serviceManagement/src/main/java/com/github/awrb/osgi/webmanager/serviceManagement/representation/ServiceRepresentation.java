@@ -1,35 +1,45 @@
 package com.github.awrb.osgi.webmanager.serviceManagement.representation;
 
 import java.util.List;
-import java.util.Map;
 
 public class ServiceRepresentation {
 
-    private long id;
-    private Map<String, Object> properties;
-    private long bundleId;
-    private List<Long> usingBundles;
+    private String interfaceName;
+    private String implementationName;
+    private List<String> methods;
 
-    public ServiceRepresentation(long id, Map<String, Object> properties, long bundleId, List<Long> usingBundles) {
-        this.id = id;
-        this.properties = properties;
-        this.bundleId = bundleId;
-        this.usingBundles = usingBundles;
+    public ServiceRepresentation() {
     }
 
-    public long getId() {
-        return id;
+    public ServiceRepresentation(String interfaceName, String implementationName, List<String> methods) {
+        this.interfaceName = interfaceName;
+        this.implementationName = implementationName;
+        this.methods = methods;
     }
 
-    public Map<String, Object> getProperties() {
-        return properties;
+    public String getInterfaceName() {
+        return interfaceName;
     }
 
-    public long getBundleId() {
-        return bundleId;
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
     }
 
-    public List<Long> getUsingBundles() {
-        return usingBundles;
+    public List<String> getMethods() {
+        return methods;
+    }
+
+    public void setMethods(List<String> methods) {
+        this.methods = methods;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ServiceRepresentation{" +
+                "interfaceName='" + interfaceName + '\'' +
+                ", implementationName='" + implementationName + '\'' +
+                ", methods=" + methods +
+                '}';
     }
 }

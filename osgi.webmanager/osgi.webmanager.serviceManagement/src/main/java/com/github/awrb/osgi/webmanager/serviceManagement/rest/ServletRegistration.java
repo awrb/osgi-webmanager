@@ -13,6 +13,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
+import javax.ws.rs.container.ContainerResponseFilter;
 
 /**
  * This registers a servlet and configures Jersey for dependency injection.
@@ -45,12 +46,22 @@ public class ServletRegistration extends ServletContainer {
         super.init(webConfig);
         ResourceConfig copyOfExistingConfig = new ResourceConfig(getConfiguration());
 
+        copyOfExistingConfig.register((ContainerResponseFilter) (containerRequestContext, response) -> {
+            response.getHeaders().add("Access-Control-Allow-Origin", "*");
+            response.getHeaders().add("Access-Control-Allow-Headers",
+                    "CSRF-Token, X-Requested-By, Authorization, Content-Type");
+            response.getHeaders().add("Access-Control-Allow-Credentials", "true");
+            response.getHeaders().add("Access-Control-Allow-Methods",
+                    "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        });
+
         copyOfExistingConfig.register(new AbstractBinder() {
             @Override
             protected void configure() {
                 bind(bundleContext).to(BundleContext.class);
             }
         });
+
         reload(copyOfExistingConfig);
     }
 

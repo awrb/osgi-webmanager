@@ -9,7 +9,7 @@ import {
 import { PieChart } from "react-minimal-pie-chart";
 import ReactTooltip from "react-tooltip";
 
-const ChartCard = ({ chartTitle, labels }) => {
+const ChartCard = ({ chartTitle, labels, data }) => {
   const [hovered, setHovered] = useState(null);
 
   return (
@@ -25,11 +25,7 @@ const ChartCard = ({ chartTitle, labels }) => {
             setHovered(null);
           }}
           label={({ dataEntry }) => dataEntry.value + "%"}
-          data={[
-            { title: "One", value: 10, color: "#E38627" },
-            { title: "Two", value: 15, color: "#C13C37" },
-            { title: "Three", value: 20, color: "#6A2135" },
-          ]}
+          data={data}
         />
         <ReactTooltip
           id="chart"

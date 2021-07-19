@@ -11,9 +11,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import { CircularProgress, IconButton } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { CircularProgress, Collapse, IconButton } from "@material-ui/core";
+import { Add, KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import AddEventModal from "./AddEventModal";
+import { publishEvent } from "../../actions/events";
 
 const useRowStyles = makeStyles({
   root: {
@@ -23,6 +24,9 @@ const useRowStyles = makeStyles({
   },
   tableTop: {
     display: "flex",
+  },
+  boldText: {
+    fontWeight: 600,
   },
 });
 
@@ -39,25 +43,59 @@ const useTableStyles = makeStyles({
 
 const Row = (props) => {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
-
+  const [open, setOpen] = useState(false);
+  console.log(row.properties);
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
-        <TableCell></TableCell>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
+        </TableCell>
         <TableCell component="th" scope="row">
           {row.topic}
         </TableCell>
         <TableCell align="right">
-          <Typography>{row.timestamp}</Typography>
+          <Typography>{row.properties && row.properties.timestamp}</Typography>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell
-          style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={3}
-        ></TableCell>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <Typography variant="h5" gutterBottom component="div">
+                Properties
+              </Typography>
+              <Table size="small" aria-label="properties">
+                <TableHead>
+                  <TableRow>
+                    <TableCell className={classes.boldText}>Key</TableCell>
+                    <TableCell className={classes.boldText}>Value</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.properties &&
+                    Object.keys(row.properties).map((key) => (
+                      <TableRow key={key}>
+                        <TableCell component="th" scope="row">
+                          {key}
+                        </TableCell>
+                        <TableCell>
+                          {JSON.stringify(row.properties[key])}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
       </TableRow>
     </React.Fragment>
   );
@@ -89,22 +127,43 @@ const Cell = ({ label, alignRight }) => (
 
 export const Events = () => {
   const classes = useTableStyles();
+  const dispatch = useDispatch();
   const [addEventModalOpen, setAddEventModalOpen] = useState(false);
 
   const columns = ["Topic", "Timestamp"];
 
   const createColumns = () =>
     eventsData.events.sort((e1, e2) =>
-      e1.timestamp < e2.timestamp ? 1 : e1.timestamp > e2.timestamp ? -1 : 0
+      (e1.properties && e1.properties.timestamp) <
+      (e2.properties && e2.properties.timestamp)
+        ? 1
+        : (e1.properties && e1.properties.timestamp) >
+          (e2.properties && e2.properties.timestamp)
+        ? -1
+        : 0
     );
 
   const eventsData = useSelector((state) => state.events);
+
+  const toObject = (keyValuePairs) => {
+    const properties = {};
+    keyValuePairs.forEach(
+      (keyValuePair) => (properties[keyValuePair.key] = keyValuePair.value)
+    );
+    return properties;
+  };
 
   return (
     <React.Fragment>
       <AddEventModal
         open={addEventModalOpen}
         handleClose={() => setAddEventModalOpen(false)}
+        handleSubmit={(topic, keyValuePairs) => {
+          const properties = toObject(keyValuePairs);
+          const data = { topic, properties };
+          dispatch(publishEvent(data));
+          setAddEventModalOpen(false);
+        }}
       />
       <TableContainer className={classes.root} component={Paper}>
         <Box display="flex">

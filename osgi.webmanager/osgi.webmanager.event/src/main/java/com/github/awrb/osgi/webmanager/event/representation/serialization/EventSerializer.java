@@ -17,6 +17,7 @@ public class EventSerializer extends JsonSerializer<Event> {
         jsonGenerator.writeFieldName("topic");
         jsonGenerator.writeString(event.getTopic());
 
+        jsonGenerator.writeObjectFieldStart("properties");
         String[] propertyNames = event.getPropertyNames();
 
         for (String propertyName : propertyNames) {
@@ -31,6 +32,7 @@ public class EventSerializer extends JsonSerializer<Event> {
             }
 
         }
+        jsonGenerator.writeEndObject();
 
         jsonGenerator.writeEndObject();
     }

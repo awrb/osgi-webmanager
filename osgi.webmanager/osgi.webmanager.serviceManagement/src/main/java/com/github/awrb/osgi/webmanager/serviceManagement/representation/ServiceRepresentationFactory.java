@@ -1,38 +1,76 @@
 package com.github.awrb.osgi.webmanager.serviceManagement.representation;
 
-import com.github.awrb.osgi.webmanager.core.utils.OSGiPropertyConstants;
-import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
 public class ServiceRepresentationFactory {
 
-    public static ServiceRepresentation createServiceRepresentation(ServiceReference<?> reference) {
-        Objects.requireNonNull(reference);
+    private ServiceRepresentationFactory() {
 
-        List<Long> bundleIds = new ArrayList<>();
+    }
 
-        if (reference.getUsingBundles() != null) {
-            bundleIds = Stream.of(reference.getUsingBundles())
-                    .map(Bundle::getBundleId)
-                    .collect(toList());
+    public static List<ServiceRepresentation> createServiceRepresentations(BundleContext bundleContext,
+                                                                           ServiceReference<?>[] serviceReferences) {
+        Objects.requireNonNull(bundleContext);
+        Objects.requireNonNull(serviceReferences);
+
+        List<ServiceRepresentation> representations = new ArrayList<>();
+
+        for (ServiceReference<?> reference : serviceReferences) {
+            Object service = bundleContext.getService(reference);
+            for (Class<?> serviceInterface : service.getClass().getInterfaces()) {
+                representations.add(new ServiceRepresentation(
+                        getClassName(service),
+                        getClassName(serviceInterface),
+                        getServiceMethods(serviceInterface)));
+            }
         }
 
-        Map<String, Object> properties = Stream.of(reference.getPropertyKeys())
-                .collect(toMap(e -> e, reference::getProperty));
+        return representations;
+    }
 
-        return new ServiceRepresentation(
-                (Long) (reference.getProperty(OSGiPropertyConstants.SERVICE_ID)),
-                properties,
-                reference.getBundle().getBundleId(),
-                bundleIds);
+
+    public static String getClassName(Object service) {
+        Class<?> clazz = service.getClass();
+        return Stream.of(clazz.getCanonicalName(), clazz.getName(), clazz.getSimpleName(), clazz.getTypeName())
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static List<String> getServiceMethods(Class<?> interfaceClass) {
+        List<String> methods = new ArrayList<>();
+        String delimiter;
+        
+        for (Method method : interfaceClass.getMethods()) {
+            StringBuilder sb = new StringBuilder();
+            delimiter = "";
+            sb.append(method.getName()).append("(");
+            for (String parameter : getMethodParameters(method)) {
+                sb.append(delimiter);
+                delimiter = ", ";
+                sb.append(parameter);
+            }
+            sb.append(")");
+            methods.add(sb.toString());
+        }
+
+        return methods;
+    }
+
+    private static List<String> getMethodParameters(Method method) {
+        List<String> parameters = new ArrayList<>();
+        for (Parameter parameter : method.getParameters()) {
+            parameters.add(parameter.getType().getSimpleName() + " " + parameter.getName());
+        }
+
+        return parameters;
     }
 }

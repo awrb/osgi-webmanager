@@ -1,5 +1,5 @@
 import { Stomp } from "@stomp/stompjs";
-import { LOG_ADDED, EVENT_ADDED } from "./actions/actions";
+import { LOG_ADDED, EVENT_ADDED, BUNDLE_CHANGED } from "./actions/actions";
 import { store } from "./components/App";
 
 const connectToStomp = () => {
@@ -27,6 +27,14 @@ const connectToStomp = () => {
       console.log(data);
       store.dispatch({
         type: EVENT_ADDED,
+        payload: JSON.parse(decoder.decode(data.binaryBody)),
+      });
+    });
+
+    client.subscribe("/topic/bundles", (data) => {
+      console.log(data);
+      store.dispatch({
+        type: BUNDLE_CHANGED,
         payload: JSON.parse(decoder.decode(data.binaryBody)),
       });
     });

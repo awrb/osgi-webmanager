@@ -6,12 +6,14 @@ import {
   SET_BUNDLE_PREFERENCES,
   SELECT_BUNDLE,
   DISMISS_BUNDLE,
+  BUNDLE_CHANGED,
 } from "../actions/actions";
 import { BUNDLE_STATES } from "../utils/constants";
 
 const initialState = {
   bundles: [],
   loading: false,
+  activities: [],
   selectedBundle: null,
   preferences: {
     name: "",
@@ -20,6 +22,11 @@ const initialState = {
     modifiedAfter: "",
   },
 };
+
+const createActivity = (bundle, state) => ({
+  text: `Bundle ${bundle.name} ${state}`,
+  timestamp: new Date().toLocaleString(),
+});
 
 const bundlesReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -34,6 +41,15 @@ const bundlesReducer = (state = initialState, action) => {
         loading: false,
         bundles: action.payload,
       };
+    case BUNDLE_CHANGED: {
+      return {
+        ...state,
+        activities: [
+          ...state.activities,
+          createActivity(action.payload.payload, action.payload.type),
+        ],
+      };
+    }
     case START_BUNDLE:
       return {
         ...state,

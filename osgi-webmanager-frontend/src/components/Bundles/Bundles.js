@@ -102,34 +102,36 @@ const Row = (props) => {
       </TableRow>
       <TableRow>
         {/* TODO zamiast zahardkodowanego 7 powinien byc props */}
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
+              <Typography
+                variant="h6"
+                gutterBottom
+              >{`Start Level ${row.startLevel}`}</Typography>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                Headers
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell>
+                      <Typography>Header</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography>Value</Typography>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {/* {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
+                  {Object.entries(row.headers).map(([key, value]) => (
+                    <TableRow key={key}>
                       <TableCell component="th" scope="row">
-                        {historyRow.date}
+                        <Typography>{key}</Typography>
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
+                      <TableCell align="right">{value}</TableCell>
                     </TableRow>
-                  ))} */}
+                  ))}
                 </TableBody>
               </Table>
             </Box>

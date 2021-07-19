@@ -45,13 +45,14 @@ public class ServiceHandler extends MessageHandlerBase<ServiceEvent> implements 
 
     @Override
     public String process(ServiceEvent event) {
-        ObjectNode node = jsonNodeFactory.objectNode();
-        node.put(JsonConstants.TYPE, MessageTypeEnum.SERVICE.name());
-        ObjectNode payload = jsonNodeFactory.objectNode();
-        payload.put(JsonConstants.TYPE, ServiceEventEnum.get(event.getType()).name());
-        payload.putPOJO("service", ServiceRepresentationFactory.createServiceRepresentation(
-                event.getServiceReference()));
-        node.set(JsonConstants.PAYLOAD, payload);
-        return node.toString();
+//        ObjectNode node = jsonNodeFactory.objectNode();
+//        node.put(JsonConstants.TYPE, MessageTypeEnum.SERVICE.name());
+//        ObjectNode payload = jsonNodeFactory.objectNode();
+//        payload.put(JsonConstants.TYPE, ServiceEventEnum.get(event.getType()).name());
+//        payload.putPOJO("service", ServiceRepresentationFactory.createServiceRepresentation(
+//                bundleContext, event.getServiceReference()));
+//        node.set(JsonConstants.PAYLOAD, payload);
+//        return node.toString();
+        return "";
     }
 }

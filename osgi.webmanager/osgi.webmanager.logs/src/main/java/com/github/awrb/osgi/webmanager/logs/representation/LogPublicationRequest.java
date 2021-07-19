@@ -10,6 +10,15 @@ public class LogPublicationRequest {
     private LogLevelEnum level;
     private String message;
 
+    public LogPublicationRequest() {
+
+    }
+
+    public LogPublicationRequest(LogLevelEnum level, String message) {
+        this.level = level;
+        this.message = message;
+    }
+
     public LogLevelEnum getLevel() {
         return level;
     }

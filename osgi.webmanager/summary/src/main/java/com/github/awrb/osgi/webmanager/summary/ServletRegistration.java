@@ -1,14 +1,18 @@
-package com.github.awrb.osgi.webmanager.event.rest;
+package com.github.awrb.osgi.webmanager.summary;
 
+import com.github.awrb.osgi.webmanager.logs.rest.LoggingService;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.WebConfig;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.event.EventAdmin;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
+import org.osgi.service.log.LogReaderService;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -21,19 +25,30 @@ import javax.ws.rs.container.ContainerResponseFilter;
  * and are injected with {@code @Inject} annotation.
  */
 @Component(service = Servlet.class,
-        property = {"alias=/api/events",
+        property = {"alias=/api/summary",
                 HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_INIT_PARAM_PREFIX +
                         ServerProperties.PROVIDER_PACKAGES + "=" +
-                        "com.github.awrb.osgi.webmanager.event.rest"
+                        "com.github.awrb.osgi.webmanager.summary"
         })
 public class ServletRegistration extends ServletContainer {
 
-    private EventAdmin eventAdmin;
+    private BundleContext bundleContext;
 
+    private LogReaderService logReaderService;
 
-    @Reference(service = EventAdmin.class)
-    public void setEventAdmin(EventAdmin eventAdmin) {
-        this.eventAdmin = eventAdmin;
+    @Reference(service = LogReaderService.class)
+    public void setLogReaderService(LogReaderService logReaderService) {
+        this.logReaderService = logReaderService;
+    }
+
+    @Activate
+    private void activate(BundleContext bundleContext) {
+        this.bundleContext = bundleContext;
+    }
+
+    @Deactivate
+    private void deactivate() {
+        this.bundleContext = null;
     }
 
     @Override
@@ -53,9 +68,11 @@ public class ServletRegistration extends ServletContainer {
         copyOfExistingConfig.register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(eventAdmin).to(EventAdmin.class);
+                bind(bundleContext).to(BundleContext.class);
+                bind(logReaderService).to(LogReaderService.class);
             }
         });
+
         reload(copyOfExistingConfig);
     }
 

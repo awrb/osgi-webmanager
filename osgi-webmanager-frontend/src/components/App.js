@@ -7,7 +7,7 @@ import Logs from "./Logs/Logs";
 import Events from "./Events/Events";
 import NotFound from "./NotFound";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "../reducers";
 import thunkMiddleware from "redux-thunk";
@@ -16,6 +16,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { PersistGate } from "redux-persist/integration/react";
 import { CircularProgress } from "@material-ui/core";
+import RpcModal from "./RPC/RpcModal";
 
 export const theme = {
   ...createMuiTheme(),
@@ -41,6 +42,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={<CircularProgress />} persistor={persistedStore}>
+        <RpcModal />
         <BrowserRouter>
           <ThemeProvider theme={theme}>
             <Header />

@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import { Fab, Grid, makeStyles, TextField } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Fab, Grid, makeStyles } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { closeRpcModal, fetchServices, performRpc } from "../../actions/rpc";
 
 const useStyles = makeStyles(() => ({
   fab: {
@@ -14,8 +15,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AddEventModal = ({ open, handleClose, handleSubmit }) => {
-  const [topic, setTopic] = useState("");
+const RpcModal = () => {
+  const rpcModalOpen = useSelector((state) => state.rpc.modalOpen);
+  const dispatch = useDispatch();
+  const classes = useStyles();
+
+  useEffect(() => dispatch(fetchServices()), []);
+
+  const rpcData = useSelector((state) => state.rpc);
+  const [service, setService] = useState("");
+  const [method, setMethod] = useState("");
   const [keysAndValues, setKeysAndValues] = useState([]);
 
   const addKeyValuePair = () => {
@@ -38,25 +47,43 @@ const AddEventModal = ({ open, handleClose, handleSubmit }) => {
     );
   };
 
-  const classes = useStyles();
+  const getRequestData = () => ({
+    service,
+    methodName: method,
+    parameterTypes: keysAndValues.map((keyAndValue) => keyAndValue.key),
+    parameterValues: keysAndValues.map((keyAndValue) =>
+      Number(keyAndValue.value)
+    ),
+  });
+
+  const close = () => dispatch(closeRpcModal());
+  const invoke = () => dispatch(performRpc(getRequestData()));
 
   return (
     <Dialog
       fullWidth
-      open={open}
-      onClose={handleClose}
+      open={rpcModalOpen}
+      onClose={close}
       aria-labelledby="add-log-dialog"
     >
-      <DialogTitle id="add-log-dialog">Send Event</DialogTitle>
+      <DialogTitle id="add-log-dialog">Remote Procedure Invocation</DialogTitle>
       <DialogContent>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
               autoFocus
               margin="dense"
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              label="Topic"
+              value={service}
+              onChange={(e) => setService(e.target.value)}
+              label="Service class"
+              type="text"
+              fullWidth
+            />
+            <TextField
+              margin="dense"
+              value={method}
+              onChange={(e) => setMethod(e.target.value)}
+              label="Method name"
               type="text"
               fullWidth
             />
@@ -69,7 +96,7 @@ const AddEventModal = ({ open, handleClose, handleSubmit }) => {
                     margin="dense"
                     value={keyValuePair.key}
                     onChange={(e) => setKey(idx, e.target.value)}
-                    label="Key"
+                    label="Argument type"
                     type="text"
                   />
                 </Grid>
@@ -91,18 +118,15 @@ const AddEventModal = ({ open, handleClose, handleSubmit }) => {
         </Fab>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={close} color="primary">
           Cancel
         </Button>
-        <Button
-          onClick={() => handleSubmit(topic, keysAndValues)}
-          color="primary"
-        >
-          Send
+        <Button onClick={invoke} color="primary">
+          Invoke
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default AddEventModal;
+export default RpcModal;

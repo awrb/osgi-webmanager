@@ -19,6 +19,9 @@ import MessageIcon from "@material-ui/icons/Message";
 import EventIcon from "@material-ui/icons/Event";
 import HomeIcon from "@material-ui/icons/Home";
 import FolderIcon from "@material-ui/icons/Folder";
+import CodeIcon from "@material-ui/icons/Code";
+import { useDispatch } from "react-redux";
+import { toggleRpcModal } from "../actions/rpc";
 
 const useStyles = makeStyles(() => ({
   background: {
@@ -44,6 +47,7 @@ const Header = () => {
   const classes = useStyles();
   const [activeButtonId, setActiveButtonId] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const dispatch = useDispatch();
 
   const notificationStream = [
     { label: "Alarm log: 123123123" },
@@ -135,6 +139,16 @@ const Header = () => {
               </Grid>
             );
           })}
+          <Grid item>
+            <IconButton
+              variant="outlined"
+              className={classes.linkButton}
+              onClick={() => dispatch(toggleRpcModal())}
+            >
+              {<CodeIcon />}
+              <Typography variant="button">RPC</Typography>
+            </IconButton>
+          </Grid>
           <Grid className={classes.bellIcon} item>
             <IconButton
               aria-controls="simple-menu"

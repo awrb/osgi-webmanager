@@ -2,6 +2,8 @@ package com.github.awrb.osgi.webmanager.logs.rest;
 
 import com.github.awrb.osgi.webmanager.logs.representation.LogPublicationRequest;
 import com.github.awrb.osgi.webmanager.logs.representation.enums.LogLevelEnum;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.log.LogEntry;
 import org.osgi.service.log.LogReaderService;
 import org.osgi.service.log.LogService;
@@ -18,13 +20,19 @@ import static java.util.stream.Collectors.toList;
  * This class retrieves historical logs from the OSGi environment.
  */
 @Path("/")
+@Component(service = LoggingService.class)
 public class LoggingService {
+
 
     @Inject
     private LogReaderService logReaderService;
-
     @Inject
     private LogService logService;
+
+    @Activate
+    public void activate() {
+        logService.log(LogService.LOG_INFO, "@@@@@");
+    }
 
     /**
      * Returns historical log entries.
@@ -56,7 +64,6 @@ public class LoggingService {
     }
 
     private boolean safeContains(LogEntry logEntry, String filter) {
-
         return logEntry != null
                 && logEntry.getMessage() != null
                 && logEntry.getMessage().toLowerCase().contains(filter.toLowerCase());

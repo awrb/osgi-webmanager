@@ -15,6 +15,7 @@
         <module>osgi.webmanager.logs</module>
         <module>osgi.webmanager.preferences</module>
         <module>osgi.webmanager.serviceManagement</module>
+        <module>summary</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -38,7 +39,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -111,7 +112,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 

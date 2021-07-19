@@ -7,70 +7,40 @@ import {
   ListItemIcon,
   Typography,
 } from "@material-ui/core";
-import { Add, Stop } from "@material-ui/icons";
+import { Add } from "@material-ui/icons";
 import React from "react";
+import { useSelector } from "react-redux";
+
+const renderActivities = (activities) => {
+  if (!activities) {
+    return [];
+  }
+
+  console.log(activities);
+
+  const sortByDate = (d1, d2) => new Date(d1) - new Date(d2);
+
+  return activities
+    .sort((a1, a2) => sortByDate(a2.timestamp, a1.timestamp))
+    .map((activity) => (
+      <ListItem>
+        <ListItemIcon>
+          <Add />
+        </ListItemIcon>
+        <ListItemText primary={activity.text} secondary={activity.timestamp} />
+      </ListItem>
+    ));
+};
 
 const ActivityList = ({ className }) => {
+  const bundles = useSelector((state) => state.bundles);
+  const { activities } = bundles;
+
   return (
     <Card className={className} variant="outlined">
       <CardContent>
         <Typography variant="h4">Activity</Typography>
-        <List>
-          <ListItem>
-            <ListItemIcon>
-              <Add />
-            </ListItemIcon>
-            <ListItemText
-              primary="Bundle X1 installed"
-              secondary="Sun Mar 14 2021 17:42:15"
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <Stop />
-            </ListItemIcon>
-            <ListItemText
-              primary="Bundle X2 stopped"
-              secondary="Sun Mar 14 2021 17:42:15"
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <Add />
-            </ListItemIcon>
-            <ListItemText
-              primary="Bundle X3 installed"
-              secondary="Sun Mar 14 2021 17:42:15"
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <Add />
-            </ListItemIcon>
-            <ListItemText
-              primary="Bundle X3 installed"
-              secondary="Sun Mar 14 2021 17:42:15"
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <Add />
-            </ListItemIcon>
-            <ListItemText
-              primary="Bundle X4 installed"
-              secondary="Sun Mar 14 2021 17:42:15"
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <Add />
-            </ListItemIcon>
-            <ListItemText
-              primary="Bundle X5 installed"
-              secondary="Sun Mar 14 2021 17:42:15"
-            />
-          </ListItem>
-        </List>
+        <List>{renderActivities(activities)}</List>
       </CardContent>
     </Card>
   );
