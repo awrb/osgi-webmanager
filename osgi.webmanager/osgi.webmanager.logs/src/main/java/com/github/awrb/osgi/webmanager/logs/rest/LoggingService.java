@@ -2,7 +2,6 @@ package com.github.awrb.osgi.webmanager.logs.rest;
 
 import com.github.awrb.osgi.webmanager.logs.representation.LogPublicationRequest;
 import com.github.awrb.osgi.webmanager.logs.representation.enums.LogLevelEnum;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.log.LogEntry;
 import org.osgi.service.log.LogReaderService;
@@ -28,11 +27,6 @@ public class LoggingService {
     private LogReaderService logReaderService;
     @Inject
     private LogService logService;
-
-    @Activate
-    public void activate() {
-        logService.log(LogService.LOG_INFO, "@@@@@");
-    }
 
     /**
      * Returns historical log entries.

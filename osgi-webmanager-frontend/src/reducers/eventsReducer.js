@@ -6,8 +6,10 @@ const initialState = {
 
 const eventsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case EVENT_ADDED:
+    case EVENT_ADDED: {
+      console.log(action.payload);
       return { ...state, events: [...state.events, action.payload.payload] };
+    }
     default:
       return state;
   }

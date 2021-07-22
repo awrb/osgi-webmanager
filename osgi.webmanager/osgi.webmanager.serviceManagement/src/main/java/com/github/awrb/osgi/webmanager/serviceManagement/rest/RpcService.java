@@ -8,6 +8,7 @@ import com.github.awrb.osgi.webmanager.serviceManagement.representation.ServiceR
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.log.LogService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -63,11 +64,34 @@ public class RpcService {
             Class<?>[] parameterTypesArray = parameterTypes.toArray(new Class<?>[0]);
             Method method = service.getClass().getMethod(remoteProcedureCall.getMethodName(), parameterTypesArray);
             method.setAccessible(true); // NOSONAR
+            fixValueTypes(parameterTypesArray, remoteProcedureCall);
             Object result = method.invoke(service, remoteProcedureCall.getParameterValues().toArray());
             return new RemoteProcedureCallResult(result);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new WebApplicationException(e);
         }
+    }
+
+    private void fixValueTypes(Class<?>[] parameterTypesArray, RemoteProcedureCall remoteProcedureCall) {
+        List<Object> values = remoteProcedureCall.getParameterValues();
+        for (int i = 0; i < parameterTypesArray.length; i++) {
+            Object value = values.get(i);
+            if (value instanceof String && isNumericType(parameterTypesArray[i])) {
+                values.set(i, Integer.parseInt((String) value));
+            }
+        }
+    }
+
+    private boolean isNumericType(Class<?> type) {
+        String name = type.getSimpleName();
+        if (isPrimitiveNumericType(name)) {
+            return true;
+        }
+        return type.isAssignableFrom(Number.class);
+    }
+
+    private boolean isPrimitiveNumericType(String name) {
+        return name.equals("int") || name.equals("short") || name.equals("float") || name.equals("double");
     }
 
     private Class<?> forNameOrPrimitive(String s) throws ClassNotFoundException {

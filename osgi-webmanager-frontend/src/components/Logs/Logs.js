@@ -97,26 +97,8 @@ const Row = (props) => {
   );
 };
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
 const Cell = ({ label, alignRight }) => (
-  <TableCell align={alignRight ? "right" : ""}>
+  <TableCell align={alignRight ? "right" : "left"}>
     <Typography variant="h5">{label}</Typography>
   </TableCell>
 );
@@ -192,19 +174,13 @@ export const Logs = () => {
             </Typography>
           </Box>
           <Box marginRight={4} flexShrink={1}>
-            <IconButton>
-              <FilterList
-                onClick={() => setFilterModalOpen(!filterModalOpen)}
-                fontSize="large"
-              />
+            <IconButton onClick={() => setFilterModalOpen(!filterModalOpen)}>
+              <FilterList fontSize="large" />
             </IconButton>
           </Box>
           <Box marginRight={2} flexShrink={0}>
-            <IconButton>
-              <Add
-                onClick={() => setLogModalOpen(!logModalOpen)}
-                fontSize="large"
-              />
+            <IconButton onClick={() => setLogModalOpen(!logModalOpen)}>
+              <Add fontSize="large" />
             </IconButton>
           </Box>
         </Box>
@@ -213,13 +189,13 @@ export const Logs = () => {
             <TableRow>
               <TableCell />
               {columns.map((column, idx) => (
-                <Cell label={column} alignRight={idx > 0} />
+                <Cell key={column} label={column} alignRight={idx > 0} />
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {createColumns().map((row) => (
-              <Row key={row.name} row={row} />
+            {createColumns().map((row, idx) => (
+              <Row key={idx} row={row} />
             ))}
           </TableBody>
         </Table>

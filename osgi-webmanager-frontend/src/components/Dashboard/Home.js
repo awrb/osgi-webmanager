@@ -3,11 +3,10 @@ import React, { useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ActivityList from "./ActivityList";
 import InfoCard from "./InfoCard";
-import { Grid } from "@material-ui/core";
+import { Grid, Paper, Typography } from "@material-ui/core";
 import ChartCard from "./ChartCard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSummary } from "../../actions/summary";
-import summaryReducer from "../../reducers/summaryReducer";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -35,15 +34,26 @@ const Home = () => {
 
   console.log(summary);
 
-  const fmt = (number) => Math.round(number * 100) / 100;
+  const roundNumber = (number) => Math.round(number * 100) / 100;
+  const formatMemory = (number) => `${Math.round(number / (1024 * 1024))}MB`;
 
   const getLogPercentage = (label) =>
-    (summary && summary.logSummary && fmt(summary.logSummary[label])) || 0;
+    (summary && summary.logSummary && roundNumber(summary.logSummary[label])) ||
+    0;
   const getBundlePercentage = (label) =>
     (summary &&
       summary.bundleSummary &&
-      fmt(summary.bundleSummary[label], 2)) ||
+      roundNumber(summary.bundleSummary[label], 2)) ||
     0;
+  const getJvmProperty = (label) =>
+    (summary && summary.jvmProperties && summary.jvmProperties[label]) || 0;
+
+  const displayJvmSetting = (label, property, formatter = (s) => s) => (
+    <Typography variant="h4" gutterBottom>
+      {`${label}: `}
+      {<b>{`${formatter(getJvmProperty(property))}`}</b>}
+    </Typography>
+  );
 
   const alarmLogPct = getLogPercentage("alarmLogPercentage");
   const infoLogPct = getLogPercentage("infoLogPercentage");
@@ -132,6 +142,19 @@ const Home = () => {
               { title: "Resolved", value: resolvedBundlePct, color: "#6A2135" },
             ]}
           />
+        </Grid>
+        <Grid style={{ textAlign: "left", marginLeft: "3vh" }} item xs={5}>
+          <Paper style={{ padding: "1vh" }}>
+            {displayJvmSetting("Total memory", "totalMemory", formatMemory)}
+            {displayJvmSetting("Free memory", "freeMemory", formatMemory)}
+            {displayJvmSetting("Max memory", "maxMemory", formatMemory)}
+          </Paper>
+        </Grid>
+        <Grid style={{ textAlign: "left" }} item xs={6}>
+          <Paper style={{ padding: "1vh" }}>
+            {displayJvmSetting("Active threads", "numOfActiveThreads")}
+            {displayJvmSetting("Available processors", "availableProcessors")}
+          </Paper>
         </Grid>
       </Grid>
     </div>

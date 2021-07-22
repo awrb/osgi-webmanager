@@ -22,8 +22,8 @@ const renderActivities = (activities) => {
 
   return activities
     .sort((a1, a2) => sortByDate(a2.timestamp, a1.timestamp))
-    .map((activity) => (
-      <ListItem>
+    .map((activity, idx) => (
+      <ListItem key={idx}>
         <ListItemIcon>
           <Add />
         </ListItemIcon>

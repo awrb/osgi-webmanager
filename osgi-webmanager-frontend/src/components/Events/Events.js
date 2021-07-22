@@ -43,9 +43,9 @@ const useTableStyles = makeStyles({
 
 const Row = (props) => {
   const { row } = props;
+  console.log(row);
   const classes = useRowStyles();
   const [open, setOpen] = useState(false);
-  console.log(row.properties);
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
@@ -59,10 +59,12 @@ const Row = (props) => {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.topic}
+          {row.event.topic}
         </TableCell>
         <TableCell align="right">
-          <Typography>{row.properties && row.properties.timestamp}</Typography>
+          <Typography>
+            {row.event.properties && row.event.properties.timestamp}
+          </Typography>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -80,14 +82,14 @@ const Row = (props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.properties &&
-                    Object.keys(row.properties).map((key) => (
+                  {row.event.properties &&
+                    Object.keys(row.event.properties).map((key) => (
                       <TableRow key={key}>
                         <TableCell component="th" scope="row">
                           {key}
                         </TableCell>
                         <TableCell>
-                          {JSON.stringify(row.properties[key])}
+                          {JSON.stringify(row.event.properties[key])}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -101,26 +103,8 @@ const Row = (props) => {
   );
 };
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
 const Cell = ({ label, alignRight }) => (
-  <TableCell align={alignRight ? "right" : ""}>
+  <TableCell align={alignRight ? "right" : "left"}>
     <Typography variant="h5">{label}</Typography>
   </TableCell>
 );
@@ -134,16 +118,18 @@ export const Events = () => {
 
   const createColumns = () =>
     eventsData.events.sort((e1, e2) =>
-      (e1.properties && e1.properties.timestamp) <
-      (e2.properties && e2.properties.timestamp)
+      (e1.event.properties && e1.event.properties.timestamp) <
+      (e2.event.properties && e2.event.properties.timestamp)
         ? 1
-        : (e1.properties && e1.properties.timestamp) >
-          (e2.properties && e2.properties.timestamp)
+        : (e1.event.properties && e1.event.properties.timestamp) >
+          (e2.event.properties && e2.event.properties.timestamp)
         ? -1
         : 0
     );
 
   const eventsData = useSelector((state) => state.events);
+
+  console.log(eventsData);
 
   const toObject = (keyValuePairs) => {
     const properties = {};
@@ -173,11 +159,10 @@ export const Events = () => {
             </Typography>
           </Box>
           <Box marginRight={2} flexShrink={0}>
-            <IconButton>
-              <Add
-                onClick={() => setAddEventModalOpen(!addEventModalOpen)}
-                fontSize="large"
-              />
+            <IconButton
+              onClick={() => setAddEventModalOpen(!addEventModalOpen)}
+            >
+              <Add fontSize="large" />
             </IconButton>
           </Box>
         </Box>
@@ -186,13 +171,13 @@ export const Events = () => {
             <TableRow>
               <TableCell />
               {columns.map((column, idx) => (
-                <Cell label={column} alignRight={idx > 0} />
+                <Cell key={column} label={column} alignRight={idx > 0} />
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {createColumns().map((row) => (
-              <Row key={row} row={row} />
+              <Row key={row.uuid} row={row} />
             ))}
           </TableBody>
         </Table>

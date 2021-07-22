@@ -6,9 +6,12 @@ import org.osgi.framework.ServiceReference;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class ServiceRepresentationFactory {
 
@@ -23,17 +26,25 @@ public class ServiceRepresentationFactory {
 
         List<ServiceRepresentation> representations = new ArrayList<>();
 
-        for (ServiceReference<?> reference : serviceReferences) {
+        for (ServiceReference<?> reference : filterOutNull(serviceReferences)) {
             Object service = bundleContext.getService(reference);
-            for (Class<?> serviceInterface : service.getClass().getInterfaces()) {
-                representations.add(new ServiceRepresentation(
-                        getClassName(service),
-                        getClassName(serviceInterface),
-                        getServiceMethods(serviceInterface)));
+            if (service != null) {
+                for (Class<?> serviceInterface : service.getClass().getInterfaces()) {
+                    representations.add(new ServiceRepresentation(
+                            getClassName(service),
+                            getClassName(serviceInterface),
+                            getServiceMethods(serviceInterface)));
+                }
             }
         }
 
         return representations;
+    }
+
+    private static List<ServiceReference<?>> filterOutNull(ServiceReference<?>[] serviceReferences) {
+        return Arrays.stream(serviceReferences)
+                .filter(Objects::nonNull)
+                .collect(toList());
     }
 
 
@@ -48,7 +59,7 @@ public class ServiceRepresentationFactory {
     private static List<String> getServiceMethods(Class<?> interfaceClass) {
         List<String> methods = new ArrayList<>();
         String delimiter;
-        
+
         for (Method method : interfaceClass.getMethods()) {
             StringBuilder sb = new StringBuilder();
             delimiter = "";

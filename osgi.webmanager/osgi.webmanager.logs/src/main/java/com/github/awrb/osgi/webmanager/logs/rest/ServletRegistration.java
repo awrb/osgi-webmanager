@@ -1,10 +1,7 @@
 package com.github.awrb.osgi.webmanager.logs.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.awrb.osgi.webmanager.logs.representation.serialization.JacksonFeature;
-import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
-import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -17,12 +14,7 @@ import org.osgi.service.log.LogService;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
-import java.io.IOException;
 
 /**
  * This registers a servlet and configures Jersey for dependency injection.
@@ -66,7 +58,7 @@ public class ServletRegistration extends ServletContainer {
             response.getHeaders().add("Access-Control-Allow-Methods",
                     "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         });
-        
+
         copyOfExistingConfig.register(JacksonFeature.class);
         copyOfExistingConfig.register(new AbstractBinder() {
             @Override

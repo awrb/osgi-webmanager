@@ -51,9 +51,7 @@ const RpcModal = () => {
     service,
     methodName: method,
     parameterTypes: keysAndValues.map((keyAndValue) => keyAndValue.key),
-    parameterValues: keysAndValues.map((keyAndValue) =>
-      Number(keyAndValue.value)
-    ),
+    parameterValues: keysAndValues.map((keyAndValue) => keyAndValue.value),
   });
 
   const close = () => dispatch(closeRpcModal());

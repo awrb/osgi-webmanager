@@ -9,16 +9,25 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>bundle</packaging>
+
+    <artifactId>summary</artifactId>
+
     <dependencies>
         <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>2.1.6</version>
-            <scope>compile</scope>
+            <groupId>com.github.awrb</groupId>
+            <artifactId>osgi.webmanager.core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.awrb</groupId>
+            <artifactId>osgi.webmanager.logs</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.awrb</groupId>
+            <artifactId>osgi.webmanager.bundle</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-    <artifactId>osgi.webmanager.core</artifactId>
-
 
 </project>

@@ -51,14 +51,14 @@ const Header = () => {
 
   const notificationStream = [
     { label: "Alarm log: 123123123" },
-    { label: "Alarm log: 123123123" },
-    { label: "Alarm log: 123123123" },
-    { label: "Alarm log: 123123123" },
+    { label: "Alarm log: 123123124" },
+    { label: "Alarm log: 123123125" },
+    { label: "Alarm log: 123123126" },
   ];
 
   const renderNotifications = (notifications) => {
     return notifications.map((notification) => (
-      <MenuItem>
+      <MenuItem key={notification.label}>
         <ListItem onClick={handleClose}>
           {notification.label}
           <ListItemSecondaryAction>
@@ -164,7 +164,7 @@ const Header = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <List>{renderNotifications(notificationStream)}</List>
+              {/* <List>{renderNotifications(notificationStream)}</List> */}
             </Menu>
           </Grid>
         </Grid>

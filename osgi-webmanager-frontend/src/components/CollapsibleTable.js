@@ -119,7 +119,7 @@ Row.propTypes = {
 };
 
 const Cell = ({ label, alignRight }) => (
-  <TableCell align={alignRight ? "right" : ""}>
+  <TableCell align={alignRight ? "right" : "left"}>
     <Typography variant="h5">{label}</Typography>
   </TableCell>
 );

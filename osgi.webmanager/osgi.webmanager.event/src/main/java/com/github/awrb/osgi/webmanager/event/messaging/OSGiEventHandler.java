@@ -17,10 +17,7 @@ import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 import javax.jms.Session;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 
 @Component(service = MessageHandler.class, immediate = true)
 public class OSGiEventHandler extends MessageHandlerBase<Event> implements MessageHandler {
@@ -86,9 +83,11 @@ public class OSGiEventHandler extends MessageHandlerBase<Event> implements Messa
     @Override
     public String process(Event event) {
         ObjectNode root = jsonNodeFactory.objectNode();
-
+        ObjectNode payload = jsonNodeFactory.objectNode();
+        payload.putPOJO(JsonConstants.EVENT, JsonMapper.serialize(event));
         root.put(JsonConstants.TYPE, MessageTypeEnum.EVENT.name());
-        root.set(JsonConstants.PAYLOAD, JsonMapper.serialize(event));
+        payload.put(JsonConstants.UUID, UUID.randomUUID().toString());
+        root.put(JsonConstants.PAYLOAD, payload);
 
         return root.toString();
     }

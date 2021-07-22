@@ -143,7 +143,7 @@ const Row = (props) => {
 };
 
 const Cell = ({ label, alignRight }) => (
-  <TableCell align={alignRight ? "right" : ""}>
+  <TableCell align={alignRight ? "right" : "left"}>
     <Typography variant="h5">{label}</Typography>
   </TableCell>
 );
@@ -195,11 +195,8 @@ export const Bundles = () => {
             </Typography>
           </Box>
           <Box marginRight={4} flexShrink={1}>
-            <IconButton>
-              <FilterList
-                onClick={() => setFilterModalOpen(!filterModalOpen)}
-                fontSize="large"
-              />
+            <IconButton onClick={() => setFilterModalOpen(!filterModalOpen)}>
+              <FilterList fontSize="large" />
             </IconButton>
           </Box>
         </Box>
@@ -208,7 +205,7 @@ export const Bundles = () => {
             <TableRow>
               <TableCell />
               {columns.map((column, idx) => (
-                <Cell label={column} alignRight={idx > 0} />
+                <Cell key={column} label={column} alignRight={idx > 0} />
               ))}
             </TableRow>
           </TableHead>
@@ -221,24 +218,6 @@ export const Bundles = () => {
       </TableContainer>
     </React.Fragment>
   );
-};
-
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
 };
 
 export default Bundles;
