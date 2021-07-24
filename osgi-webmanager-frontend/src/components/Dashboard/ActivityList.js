@@ -16,8 +16,6 @@ const renderActivities = (activities) => {
     return [];
   }
 
-  console.log(activities);
-
   const sortByDate = (d1, d2) => new Date(d1) - new Date(d2);
 
   return activities

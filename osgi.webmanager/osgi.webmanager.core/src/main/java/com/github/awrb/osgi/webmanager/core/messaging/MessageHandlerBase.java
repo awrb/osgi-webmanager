@@ -53,6 +53,8 @@ public abstract class MessageHandlerBase<T> {
         for (ClientQueryCouple couple : copyMap.keySet()) {
             unsubscribe(couple.getClientId(), couple.getQuery());
         }
+
+        clientIdToSession.clear();
     }
 
     public abstract String process(T message);

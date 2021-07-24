@@ -8,7 +8,6 @@ import com.github.awrb.osgi.webmanager.serviceManagement.representation.ServiceR
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.LogService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

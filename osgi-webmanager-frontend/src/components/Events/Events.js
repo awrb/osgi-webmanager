@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Table from "@material-ui/core/Table";
@@ -43,7 +42,6 @@ const useTableStyles = makeStyles({
 
 const Row = (props) => {
   const { row } = props;
-  console.log(row);
   const classes = useRowStyles();
   const [open, setOpen] = useState(false);
   return (

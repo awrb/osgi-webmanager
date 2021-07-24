@@ -167,19 +167,19 @@ public class BundleService {
         }
     }
 
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Path("/{id}/update")
-    public void updateBundle(@PathParam("id") Long id, @FormDataParam("file") InputStream bundle) {
-        try {
-            getBundleById(id).update(bundle);
-        } catch (SecurityException e) {
-            throw new WebApplicationException(e, FORBIDDEN);
-        } catch (BundleException e) {
-            throw new WebApplicationException(e, INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @PUT
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.MULTIPART_FORM_DATA)
+//    @Path("/{id}/update")
+//    public void updateBundle(@PathParam("id") Long id, @FormDataParam("file") InputStream bundle) {
+//        try {
+//            getBundleById(id).update(bundle);
+//        } catch (SecurityException e) {
+//            throw new WebApplicationException(e, FORBIDDEN);
+//        } catch (BundleException e) {
+//            throw new WebApplicationException(e, INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     private Bundle getBundleById(long id) {
         return Optional.ofNullable(bundleContext.getBundle(id))

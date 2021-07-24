@@ -24,7 +24,6 @@ const connectToStomp = () => {
     });
 
     client.subscribe("/topic/events", (data) => {
-      console.log(data);
       store.dispatch({
         type: EVENT_ADDED,
         payload: JSON.parse(decoder.decode(data.binaryBody)),
@@ -32,7 +31,7 @@ const connectToStomp = () => {
     });
 
     client.subscribe("/topic/bundles", (data) => {
-      console.log(data);
+      console.log("@@@@");
       store.dispatch({
         type: BUNDLE_CHANGED,
         payload: JSON.parse(decoder.decode(data.binaryBody)),

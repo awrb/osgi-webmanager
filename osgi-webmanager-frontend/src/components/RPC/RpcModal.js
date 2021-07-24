@@ -55,7 +55,10 @@ const RpcModal = () => {
   });
 
   const close = () => dispatch(closeRpcModal());
-  const invoke = () => dispatch(performRpc(getRequestData()));
+  const invoke = () => {
+    dispatch(performRpc(getRequestData()));
+    dispatch(closeRpcModal());
+  };
 
   return (
     <Dialog
@@ -88,7 +91,7 @@ const RpcModal = () => {
           </Grid>
           {keysAndValues.map((keyValuePair, idx) => {
             return (
-              <React.Fragment>
+              <React.Fragment key={idx}>
                 <Grid item xs={6}>
                   <TextField
                     margin="dense"

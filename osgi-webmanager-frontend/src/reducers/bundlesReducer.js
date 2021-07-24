@@ -42,6 +42,7 @@ const bundlesReducer = (state = initialState, action) => {
         bundles: action.payload,
       };
     case BUNDLE_CHANGED: {
+      console.log(action);
       return {
         ...state,
         activities: [

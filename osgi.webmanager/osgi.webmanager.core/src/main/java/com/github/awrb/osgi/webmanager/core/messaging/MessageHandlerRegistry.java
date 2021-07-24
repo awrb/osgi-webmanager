@@ -57,6 +57,7 @@ public class MessageHandlerRegistry {
     }
 
     public Optional<MessageHandler> getHandlerForJmsTopic(String topic) {
+        // Nie wywoluje sie bez restartu
         Objects.requireNonNull(topic);
         return messageHandlers.stream().filter(handler ->
                 topic.startsWith(handler.getSupportedDestination())).findAny();

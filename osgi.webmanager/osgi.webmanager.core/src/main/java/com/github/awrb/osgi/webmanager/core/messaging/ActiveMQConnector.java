@@ -23,12 +23,10 @@ import java.util.Optional;
 public class ActiveMQConnector {
 
     private LogService logService;
-
     private Connection connection;
-
     private Session session;
-
     private MessageHandlerRegistry registry;
+    private ActiveMQConfiguration activeMQConfiguration;
 
     @Reference(service = LogService.class)
     public void setLogService(LogService logService) {
@@ -40,12 +38,17 @@ public class ActiveMQConnector {
         this.registry = registry;
     }
 
+    @Reference
+    public void setActiveMQConfiguration(ActiveMQConfiguration activeMQConfiguration) {
+        this.activeMQConfiguration = activeMQConfiguration;
+    }
+
     @Activate
     private void connect() {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-        factory.setBrokerURL("tcp://localhost:61616");
-        factory.setPassword("admin");
-        factory.setUserName("admin");
+        factory.setBrokerURL(activeMQConfiguration.getUrl());
+        factory.setPassword(activeMQConfiguration.getPassword());
+        factory.setUserName(activeMQConfiguration.getUsername());
         factory.setWatchTopicAdvisories(true);
         try {
             Connection connection = factory.createConnection();
@@ -74,7 +77,6 @@ public class ActiveMQConnector {
 
     private void createConsumerForTopic(ActiveMQDestination topic, String clientId) {
         String topicName = topic.getPhysicalName();
-
         Optional<MessageHandler> handlerOptional = registry.getHandlerForJmsTopic(topicName);
         try {
             Session session = createSession();

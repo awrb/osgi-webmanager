@@ -5,17 +5,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
-//import com.github.awrb.osgi.webmanager.bundle.representation.mixins.BundleMixin;
-//import com.github.awrb.osgi.webmanager.event.representation.mixins.EventMixin;
-//import com.github.awrg.osgi.webmanager.logs.representation.mixins.LogEntryMixin;
-
-import org.osgi.framework.Bundle;
-import org.osgi.service.event.Event;
-import org.osgi.service.log.LogEntry;
-
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+
+//import com.github.awrb.osgi.webmanager.bundle.representation.mixins.BundleMixin;
+//import com.github.awrb.osgi.webmanager.event.representation.mixins.EventMixin;
+//import com.github.awrg.osgi.webmanager.logs.representation.mixins.LogEntryMixin;
 
 /**
  * This class configures a custom {@link JacksonJsonProvider}.

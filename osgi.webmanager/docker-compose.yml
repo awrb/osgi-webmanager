@@ -1,0 +1,16 @@
+version: "2.0"
+services:
+  webmanager:
+    container_name: webm
+    image: webmanager:latest
+    stdin_open: true
+    tty: true
+    ports:
+      - "8181:8181"
+    environment:
+      - ACTIVEMQ_USERNAME=admin
+      - ACTIVEMQ_PASSWORD=admin
+      - ACTIVEMQ_URL=tcp://activemq:61616
+  activemq:
+     image: "rmohr/activemq:5.15.2"
+     container_name: activemq
