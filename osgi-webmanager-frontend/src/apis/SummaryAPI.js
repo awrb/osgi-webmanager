@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_URL } from "../config";
 
 const SummaryAPI = axios.create({
-  baseURL: "http://localhost:8181/api/summary",
+  baseURL: `${API_URL}/summary`,
 });
 
 export default SummaryAPI;

@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_URL } from "../config";
 
 const LogsAPI = axios.create({
-  baseURL: "http://localhost:8181/api/logs",
+  baseURL: `${API_URL}/logs`,
 });
 
 export default LogsAPI;

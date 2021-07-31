@@ -7,10 +7,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.WebConfig;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.*;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.log.LogReaderService;
 
@@ -36,7 +33,8 @@ public class ServletRegistration extends ServletContainer {
 
     private LogReaderService logReaderService;
 
-    @Reference(service = LogReaderService.class)
+    @Reference(service = LogReaderService.class, cardinality = ReferenceCardinality.OPTIONAL,
+    policyOption = ReferencePolicyOption.GREEDY)
     public void setLogReaderService(LogReaderService logReaderService) {
         this.logReaderService = logReaderService;
     }

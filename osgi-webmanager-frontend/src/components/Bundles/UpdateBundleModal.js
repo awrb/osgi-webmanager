@@ -14,6 +14,10 @@ const UpdateBundleModal = ({ open, handleClose, handleSubmit, bundleName }) => {
   const [file, setFile] = useState(null);
   const handleUpload = ({ target }) => setFile(target.files[0]);
 
+  if (!bundleName) {
+    return null;
+  }
+
   return (
     <Dialog
       fullWidth

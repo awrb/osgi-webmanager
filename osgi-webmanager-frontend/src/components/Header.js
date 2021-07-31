@@ -3,23 +3,17 @@ import {
   AppBar,
   Grid,
   IconButton,
-  List,
-  ListItem,
-  Menu,
-  MenuItem,
   Toolbar,
   Typography,
-  Checkbox,
-  ListItemSecondaryAction,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import MessageIcon from "@material-ui/icons/Message";
 import EventIcon from "@material-ui/icons/Event";
 import HomeIcon from "@material-ui/icons/Home";
 import FolderIcon from "@material-ui/icons/Folder";
 import CodeIcon from "@material-ui/icons/Code";
+import Notifications from "./Notifications";
 import { useDispatch } from "react-redux";
 import { toggleRpcModal } from "../actions/rpc";
 
@@ -46,42 +40,7 @@ const useStyles = makeStyles(() => ({
 const Header = () => {
   const classes = useStyles();
   const [activeButtonId, setActiveButtonId] = useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const dispatch = useDispatch();
-
-  const notificationStream = [
-    { label: "Alarm log: 123123123" },
-    { label: "Alarm log: 123123124" },
-    { label: "Alarm log: 123123125" },
-    { label: "Alarm log: 123123126" },
-  ];
-
-  const renderNotifications = (notifications) => {
-    return notifications.map((notification) => (
-      <MenuItem key={notification.label}>
-        <ListItem onClick={handleClose}>
-          {notification.label}
-          <ListItemSecondaryAction>
-            <Checkbox
-              edge="end"
-              color="primary"
-              // onChange={handleToggle(value)}
-              checked={true}
-              // inputProps={{ 'aria-labelledby': labelId }}
-            />
-          </ListItemSecondaryAction>
-        </ListItem>
-      </MenuItem>
-    ));
-  };
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const buttons = [
     {
@@ -150,22 +109,7 @@ const Header = () => {
             </IconButton>
           </Grid>
           <Grid className={classes.bellIcon} item>
-            <IconButton
-              aria-controls="simple-menu"
-              aria-haspopup="true"
-              onClick={(e) => handleClick(e)}
-            >
-              <NotificationsIcon />
-            </IconButton>
-            <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              {/* <List>{renderNotifications(notificationStream)}</List> */}
-            </Menu>
+            <Notifications />
           </Grid>
         </Grid>
       </Toolbar>

@@ -17,8 +17,13 @@ const useStyles = makeStyles(() => ({
     height: "40vh",
     textAlign: "left",
     overflow: "auto",
+    borderRadius: 25,
   },
   cardIcon: { float: "right" },
+  rounded: {
+    borderRadius: 25,
+    padding: "1vh",
+  },
 }));
 
 const Home = () => {
@@ -119,6 +124,7 @@ const Home = () => {
         </Grid>
         <Grid item xs={2}>
           <ChartCard
+            className={classes.rounded}
             chartTitle="Logs"
             labels={{ 0: "Info", 1: "Alarm", 2: "Warning" }}
             data={[
@@ -130,6 +136,7 @@ const Home = () => {
         </Grid>
         <Grid item xs={2}>
           <ChartCard
+            className={classes.rounded}
             chartTitle="Bundles"
             labels={{ 0: "Installed", 1: "Active", 2: "Stopped" }}
             data={[
@@ -144,14 +151,14 @@ const Home = () => {
           />
         </Grid>
         <Grid style={{ textAlign: "left", marginLeft: "3vh" }} item xs={5}>
-          <Paper style={{ padding: "1vh" }}>
+          <Paper elevation={4} className={classes.rounded}>
             {displayJvmSetting("Total memory", "totalMemory", formatMemory)}
             {displayJvmSetting("Free memory", "freeMemory", formatMemory)}
             {displayJvmSetting("Max memory", "maxMemory", formatMemory)}
           </Paper>
         </Grid>
         <Grid style={{ textAlign: "left" }} item xs={6}>
-          <Paper style={{ padding: "1vh" }}>
+          <Paper elevation={4} className={classes.rounded}>
             {displayJvmSetting("Active threads", "numOfActiveThreads")}
             {displayJvmSetting("Available processors", "availableProcessors")}
           </Paper>

@@ -30,7 +30,6 @@ public class EventSerializer extends JsonSerializer<Event> {
             } else {
                 jsonGenerator.writeObject(event.getProperty(propertyName));
             }
-
         }
         jsonGenerator.writeEndObject();
 

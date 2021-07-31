@@ -7,10 +7,7 @@ import com.github.awrb.osgi.webmanager.core.messaging.MessageHandler;
 import com.github.awrb.osgi.webmanager.core.messaging.MessageHandlerBase;
 import com.github.awrb.osgi.webmanager.core.messaging.enums.MessageTypeEnum;
 import com.github.awrb.osgi.webmanager.logs.representation.serialization.JsonMapper;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.*;
 import org.osgi.service.log.LogEntry;
 import org.osgi.service.log.LogListener;
 import org.osgi.service.log.LogReaderService;
@@ -28,7 +25,8 @@ public class LogHandler extends MessageHandlerBase<LogEntry> implements MessageH
     @Reference
     private LogService logService;
 
-    @Reference(service = LogReaderService.class)
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL, service = LogReaderService.class,
+                policyOption = ReferencePolicyOption.GREEDY)
     public void setLogReaderService(LogReaderService logReaderService) {
         this.logReaderService = logReaderService;
     }

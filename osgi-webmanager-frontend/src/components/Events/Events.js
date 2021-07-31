@@ -10,7 +10,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import { CircularProgress, Collapse, IconButton } from "@material-ui/core";
+import { Collapse, IconButton } from "@material-ui/core";
 import { Add, KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import AddEventModal from "./AddEventModal";
 import { publishEvent } from "../../actions/events";
@@ -33,6 +33,7 @@ const useTableStyles = makeStyles({
   root: {
     margin: "3vh",
     maxWidth: "98%",
+    borderRadius: 25,
   },
   title: {
     margin: 16,
@@ -149,7 +150,7 @@ export const Events = () => {
           setAddEventModalOpen(false);
         }}
       />
-      <TableContainer className={classes.root} component={Paper}>
+      <TableContainer className={classes.root} elevation={4} component={Paper}>
         <Box display="flex">
           <Box width="100%">
             <Typography className={classes.title} variant="h4">

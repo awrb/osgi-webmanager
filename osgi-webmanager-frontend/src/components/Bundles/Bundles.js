@@ -15,6 +15,7 @@ import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { FilterList } from "@material-ui/icons";
+import Loader from "../Loader";
 import {
   fetchBundles,
   stopBundle,
@@ -27,7 +28,7 @@ import {
 } from "../../actions/bundles";
 
 import { useDispatch, useSelector } from "react-redux";
-import { CircularProgress, Menu, MenuItem } from "@material-ui/core";
+import { Menu, MenuItem } from "@material-ui/core";
 import FilterBundlesModal from "./FilterBundlesModal";
 import UpdateBundleModal from "./UpdateBundleModal";
 
@@ -43,6 +44,7 @@ const useTableStyles = makeStyles({
   root: {
     margin: "3vh",
     maxWidth: "98%",
+    borderRadius: 25,
   },
   title: {
     margin: 16,
@@ -102,7 +104,7 @@ const Row = (props) => {
       </TableRow>
       <TableRow>
         {/* TODO zamiast zahardkodowanego 7 powinien byc props */}
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography
@@ -129,7 +131,18 @@ const Row = (props) => {
                       <TableCell component="th" scope="row">
                         <Typography>{key}</Typography>
                       </TableCell>
-                      <TableCell align="right">{value}</TableCell>
+                      <TableCell
+                        style={{
+                          overflow: "hidden",
+                          wordWrap: "break-word",
+                          maxWidth: "98%",
+                        }}
+                        align="right"
+                      >
+                        <Typography style={{ wordWrap: "break-word" }}>
+                          {value}
+                        </Typography>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -162,7 +175,7 @@ export const Bundles = () => {
   }, []);
 
   if (bundlesData.loading) {
-    return <CircularProgress />;
+    return <Loader />;
   }
 
   return (
@@ -187,7 +200,7 @@ export const Bundles = () => {
         bundleName={selectedBundle && selectedBundle.name}
       />
 
-      <TableContainer className={classes.root} component={Paper}>
+      <TableContainer className={classes.root} elevation={4} component={Paper}>
         <Box display="flex">
           <Box width="100%">
             <Typography className={classes.title} variant="h4">

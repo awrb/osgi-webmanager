@@ -29,6 +29,7 @@ const composed = compose(applyMiddleware(thunkMiddleware));
 const persistConfig = {
   key: "preferences",
   storage,
+  blacklist: ["rpc", "events"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

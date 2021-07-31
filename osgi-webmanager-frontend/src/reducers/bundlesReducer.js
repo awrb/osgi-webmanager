@@ -25,6 +25,7 @@ const initialState = {
 
 const createActivity = (bundle, state) => ({
   text: `Bundle ${bundle.name} ${state}`,
+  type: state,
   timestamp: new Date().toLocaleString(),
 });
 
@@ -42,7 +43,6 @@ const bundlesReducer = (state = initialState, action) => {
         bundles: action.payload,
       };
     case BUNDLE_CHANGED: {
-      console.log(action);
       return {
         ...state,
         activities: [

@@ -2,6 +2,7 @@ package com.github.awrb.osgi.webmanager.event.representation.serialization;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.github.awrb.osgi.webmanager.bundle.representation.mixins.BundleMixin;
 import com.github.awrb.osgi.webmanager.event.representation.mixins.EventMixin;
@@ -25,6 +26,7 @@ public class JsonMapper {
         mapper.addMixIn(ServiceReference.class, ServiceReferenceMixin.class);
         mapper.addMixIn(ServiceEvent.class, ServiceEventMixin.class);
         mapper.addMixIn(Event.class, EventMixin.class);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     }
 
     public static <T> JsonNode serialize(T object) {

@@ -5,6 +5,8 @@ import {
   PUBLISH_LOG_DONE,
   PUBLISH_LOG_PROGRESS,
   SET_LOG_PREFERENCES,
+  READ_NOTIFICATION,
+  CLEAR_READ_NOTIFICATIONS,
 } from "./actions";
 import { LOG_TYPES } from "../utils/constants";
 
@@ -28,4 +30,12 @@ export const publishLog = (data) => async (dispatch) => {
 
 export const setPreferences = (preferences) => (dispatch) => {
   dispatch({ type: SET_LOG_PREFERENCES, payload: preferences });
+};
+
+export const readNotification = (idx) => (dispatch) => {
+  dispatch({ type: READ_NOTIFICATION, payload: idx });
+};
+
+export const clearReadNotifications = () => (dispatch) => {
+  dispatch({ type: CLEAR_READ_NOTIFICATIONS });
 };

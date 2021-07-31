@@ -2,8 +2,10 @@ import { Stomp } from "@stomp/stompjs";
 import { LOG_ADDED, EVENT_ADDED, BUNDLE_CHANGED } from "./actions/actions";
 import { store } from "./components/App";
 
+import { WS_URL } from "./config";
+
 const connectToStomp = () => {
-  const client = Stomp.client("ws://localhost:61614/ws");
+  const client = Stomp.client(`ws://localhost${WS_URL}`);
 
   const headers = {
     login: "karaf",

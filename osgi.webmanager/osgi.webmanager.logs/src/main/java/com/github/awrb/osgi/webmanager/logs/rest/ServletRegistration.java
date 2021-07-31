@@ -8,6 +8,8 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.WebConfig;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.log.LogReaderService;
 import org.osgi.service.log.LogService;
@@ -31,6 +33,8 @@ import javax.ws.rs.container.ContainerResponseFilter;
 public class ServletRegistration extends ServletContainer {
 
     private LogService logService;
+
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL, service = LogReaderService.class)
     private LogReaderService logReaderService;
 
 
@@ -39,11 +43,6 @@ public class ServletRegistration extends ServletContainer {
         this.logService = logService;
     }
 
-
-    @Reference(service = LogReaderService.class)
-    public void setLogReaderService(LogReaderService logReaderService) {
-        this.logReaderService = logReaderService;
-    }
 
     @Override
     protected void init(WebConfig webConfig) throws ServletException {

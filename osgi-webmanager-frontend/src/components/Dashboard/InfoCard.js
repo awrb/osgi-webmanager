@@ -1,5 +1,6 @@
 import React from "react";
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { CardContent, Typography } from "@material-ui/core";
+import RoundedCard from "./RoundedCard";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -11,6 +12,7 @@ const useStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
+    borderRadius: 25,
   },
   number: { fontWeight: 600 },
 });
@@ -18,14 +20,14 @@ const useStyles = makeStyles({
 const InfoCard = ({ label, number, textColor }) => {
   const classes = useStyles();
   return (
-    <Card className={classes.card} variant="outlined">
+    <RoundedCard className={classes.card}>
       <CardContent style={{ color: textColor || "#000" }}>
         <Typography className={classes.number} variant="h3">
           {number}
         </Typography>
         <Typography variant="body1">{label}</Typography>
       </CardContent>
-    </Card>
+    </RoundedCard>
   );
 };
 

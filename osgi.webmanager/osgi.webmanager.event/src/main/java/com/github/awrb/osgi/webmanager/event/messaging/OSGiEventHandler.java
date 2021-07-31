@@ -8,7 +8,6 @@ import com.github.awrb.osgi.webmanager.core.messaging.enums.MessageTypeEnum;
 import com.github.awrb.osgi.webmanager.event.representation.mixins.EventMixin;
 import com.github.awrb.osgi.webmanager.event.representation.serialization.JsonMapper;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -83,6 +82,10 @@ public class OSGiEventHandler extends MessageHandlerBase<Event> implements Messa
 
     @Override
     public String process(Event event) {
+        if (event == null) {
+            return null;
+        }
+
         ObjectNode root = jsonNodeFactory.objectNode();
         ObjectNode payload = jsonNodeFactory.objectNode();
         payload.putPOJO(JsonConstants.EVENT, JsonMapper.serialize(event));

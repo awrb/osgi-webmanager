@@ -1,7 +1,9 @@
 import axios from "axios";
 
+import { API_URL } from "../config";
+
 const BundlesAPI = axios.create({
-  baseURL: "http://localhost:8181/api/bundles",
+  baseURL: `${API_URL}/bundles`,
 });
 
 export default BundlesAPI;
