@@ -16,6 +16,7 @@
         <module>osgi.webmanager.preferences</module>
         <module>osgi.webmanager.serviceManagement</module>
         <module>summary</module>
+        <module>features</module>
     </modules>
     <packaging>pom</packaging>
 

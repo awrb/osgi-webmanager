@@ -2,3 +2,4 @@
 target/*
 ../osgi.webmanager/.idea
 lib/
+karaf

@@ -14,3 +14,10 @@ services:
   activemq:
      image: "rmohr/activemq:5.15.2"
      container_name: activemq
+  ui:
+     image: ui
+     container_name: ui
+     stdin_open: true
+     tty: true
+     ports: 
+       - "80:80"
