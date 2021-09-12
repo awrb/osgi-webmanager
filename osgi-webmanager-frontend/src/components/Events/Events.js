@@ -8,6 +8,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import { Collapse, IconButton } from "@material-ui/core";
@@ -34,6 +35,8 @@ const useTableStyles = makeStyles({
     margin: "3vh",
     maxWidth: "98%",
     borderRadius: 25,
+    borderStyle: "solid",
+    borderWidth: 1,
   },
   title: {
     margin: 16,
@@ -156,6 +159,7 @@ export const Events = () => {
             <Typography className={classes.title} variant="h4">
               Events
             </Typography>
+            <Divider />
           </Box>
           <Box marginRight={2} flexShrink={0}>
             <IconButton

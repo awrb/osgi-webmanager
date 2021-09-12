@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features name="webmanager" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
+    <feature name="webmanager" version="1.0.0">
+        <bundle start-level="90">mvn:com.github.awrb/osgi.webmanager.core/1.0-SNAPSHOT</bundle>
+        <bundle start-level="91">mvn:com.github.awrb/osgi.webmanager.bundle/1.0-SNAPSHOT</bundle>
+        <bundle start-level="91">mvn:com.github.awrb/osgi.webmanager.serviceManagement/1.0-SNAPSHOT</bundle>
+        <bundle start-level="90">mvn:com.github.awrb/osgi.webmanager.configuration/1.0-SNAPSHOT</bundle>
+        <bundle start-level="90">mvn:com.github.awrb/osgi.webmanager.preferences/1.0-SNAPSHOT</bundle>
+            <bundle start-level="92">mvn:com.github.awrb/osgi.webmanager.logs/1.0-SNAPSHOT</bundle>
+        <bundle start-level="92">mvn:com.github.awrb/osgi.webmanager.event/1.0-SNAPSHOT</bundle>
+        <bundle start-level="92">mvn:com.github.awrb/summary/1.0-SNAPSHOT</bundle>
+    </feature>
+</features>

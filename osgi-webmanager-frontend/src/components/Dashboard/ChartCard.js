@@ -7,6 +7,7 @@ import RoundedCard from "./RoundedCard";
 const ChartCard = ({ chartTitle, labels, data, className }) => {
   const [hovered, setHovered] = useState(null);
 
+  data = data.filter((d) => d.value > 0);
   return (
     <RoundedCard className={className}>
       <CardHeader title={chartTitle} />
@@ -20,7 +21,7 @@ const ChartCard = ({ chartTitle, labels, data, className }) => {
           onMouseOut={() => {
             setHovered(null);
           }}
-          label={({ dataEntry }) => dataEntry.value + "%"}
+          label={({ dataEntry }) => dataEntry.value * 100 + "%"}
           data={data}
         />
         <ReactTooltip

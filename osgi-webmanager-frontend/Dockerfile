@@ -1,7 +1,7 @@
 FROM node:14.7.0 as build
 
 ARG REACT_APP_API_URL=/webm
-ARG REACT_APP_WS_URL=:61614/ws
+ARG REACT_APP_WS_URL=/ws
 
 WORKDIR /
 

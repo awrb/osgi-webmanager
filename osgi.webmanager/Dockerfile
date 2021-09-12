@@ -16,6 +16,7 @@ COPY docker-entrypoint.sh /
 RUN chmod 755 /docker-entrypoint.sh
 
 COPY karaf /karaf
+RUN rm -rf /karaf/data 
 
 WORKDIR /tmp/src
 

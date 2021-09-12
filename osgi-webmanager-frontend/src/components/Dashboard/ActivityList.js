@@ -4,11 +4,13 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Grid,
   Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import CheckIcon from "@material-ui/icons/Check";
+import MessageIcon from "@material-ui/icons/Message";
 import React from "react";
 import { useSelector } from "react-redux";
 import { BUNDLE_STATES } from "../../utils/constants";
@@ -49,12 +51,19 @@ const renderActivities = (activities) => {
 const ActivityList = ({ className }) => {
   const bundles = useSelector((state) => state.bundles);
   const { activities } = bundles;
-  console.log(activities);
 
   return (
-    <RoundedCard elevation={4} className={className}>
+    <RoundedCard className={className}>
       <CardContent>
-        <Typography variant="h4">Activity</Typography>
+        <Grid container>
+          <Grid item>
+            <MessageIcon fontSize="large" style={{ marginTop: 2 }} />
+          </Grid>
+          <Grid item>
+            <Typography variant="h4">Activity</Typography>
+          </Grid>
+        </Grid>
+
         <List>{renderActivities(activities)}</List>
       </CardContent>
     </RoundedCard>

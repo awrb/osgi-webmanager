@@ -15,6 +15,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import { IconButton } from "@material-ui/core";
 import Loader from "../Loader";
@@ -40,6 +41,8 @@ const useTableStyles = makeStyles({
     margin: "3vh",
     maxWidth: "98%",
     borderRadius: 25,
+    borderStyle: "solid",
+    borderWidth: 1,
   },
   title: {
     margin: 16,
@@ -173,6 +176,7 @@ export const Logs = () => {
             <Typography className={classes.title} variant="h4">
               Logs
             </Typography>
+            <Divider />
           </Box>
           <Box marginRight={4} flexShrink={1}>
             <IconButton onClick={() => setFilterModalOpen(!filterModalOpen)}>

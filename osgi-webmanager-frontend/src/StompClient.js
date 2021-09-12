@@ -33,7 +33,6 @@ const connectToStomp = () => {
     });
 
     client.subscribe("/topic/bundles", (data) => {
-      console.log("@@@@");
       store.dispatch({
         type: BUNDLE_CHANGED,
         payload: JSON.parse(decoder.decode(data.binaryBody)),

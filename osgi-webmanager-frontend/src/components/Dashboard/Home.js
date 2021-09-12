@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ActivityList from "./ActivityList";
 import InfoCard from "./InfoCard";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import MemoryIcon from "@material-ui/icons/Memory";
+import ComputerIcon from "@material-ui/icons/Computer";
+import { Grid, Paper, Typography, Divider } from "@material-ui/core";
 import ChartCard from "./ChartCard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSummary } from "../../actions/summary";
@@ -23,6 +25,8 @@ const useStyles = makeStyles(() => ({
   rounded: {
     borderRadius: 25,
     padding: "1vh",
+    borderStyle: "solid",
+    borderWidth: 1,
   },
 }));
 
@@ -40,7 +44,7 @@ const Home = () => {
   console.log(summary);
 
   const roundNumber = (number) => Math.round(number * 100) / 100;
-  const formatMemory = (number) => `${Math.round(number / (1024 * 1024))}MB`;
+  const formatMemory = (number) => `${Math.round(number / (1024 * 1024))}`;
 
   const getLogPercentage = (label) =>
     (summary && summary.logSummary && roundNumber(summary.logSummary[label])) ||
@@ -128,9 +132,9 @@ const Home = () => {
             chartTitle="Logs"
             labels={{ 0: "Info", 1: "Alarm", 2: "Warning" }}
             data={[
-              { title: "Info", value: infoLogPct, color: "#E38627" },
-              { title: "Alarm", value: alarmLogPct, color: "#C13C37" },
-              { title: "Warning", value: warningLogPct, color: "#6A2135" },
+              { title: "Info", value: infoLogPct, color: "green" },
+              { title: "Alarm", value: alarmLogPct, color: theme.alarm },
+              { title: "Warning", value: warningLogPct, color: theme.warning },
             ]}
           />
         </Grid>
@@ -143,22 +147,33 @@ const Home = () => {
               {
                 title: "Installed",
                 value: installedBundlePct,
-                color: "#E38627",
+                color: "yellow",
               },
-              { title: "Active", value: activeBundlePct, color: "#C13C37" },
-              { title: "Resolved", value: resolvedBundlePct, color: "#6A2135" },
+              { title: "Active", value: activeBundlePct, color: "green" },
+              { title: "Resolved", value: resolvedBundlePct, color: "blue" },
             ]}
           />
         </Grid>
         <Grid style={{ textAlign: "left", marginLeft: "3vh" }} item xs={5}>
           <Paper elevation={4} className={classes.rounded}>
-            {displayJvmSetting("Total memory", "totalMemory", formatMemory)}
-            {displayJvmSetting("Free memory", "freeMemory", formatMemory)}
-            {displayJvmSetting("Max memory", "maxMemory", formatMemory)}
+            <Grid container>
+              <Grid item>
+                <MemoryIcon fontSize="large" style={{ marginTop: "1vh" }} />
+              </Grid>
+              <Grid item>
+                <Typography variant="h3">Memory [MB]</Typography>
+              </Grid>
+            </Grid>
+            <Divider style={{ marginTop: "2vh", marginBottom: "2vh" }} />
+            {displayJvmSetting("Total", "totalMemory", formatMemory)}
+            {displayJvmSetting("Free", "freeMemory", formatMemory)}
+            {displayJvmSetting("Max", "maxMemory", formatMemory)}
           </Paper>
         </Grid>
         <Grid style={{ textAlign: "left" }} item xs={6}>
           <Paper elevation={4} className={classes.rounded}>
+            <ComputerIcon fontSize="large" />
+            <Divider />
             {displayJvmSetting("Active threads", "numOfActiveThreads")}
             {displayJvmSetting("Available processors", "availableProcessors")}
           </Paper>

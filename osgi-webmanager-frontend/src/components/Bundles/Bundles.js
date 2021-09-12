@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
@@ -45,6 +45,8 @@ const useTableStyles = makeStyles({
     margin: "3vh",
     maxWidth: "98%",
     borderRadius: 25,
+    borderStyle: "solid",
+    borderWidth: 1,
   },
   title: {
     margin: 16,
@@ -110,7 +112,7 @@ const Row = (props) => {
               <Typography
                 variant="h6"
                 gutterBottom
-              >{`Start Level ${row.startLevel}`}</Typography>
+              >{`Start Level: ${row.startLevel}`}</Typography>
               <Typography variant="h6" gutterBottom component="div">
                 Headers
               </Typography>
@@ -206,6 +208,7 @@ export const Bundles = () => {
             <Typography className={classes.title} variant="h4">
               Bundles
             </Typography>
+            <Divider />
           </Box>
           <Box marginRight={4} flexShrink={1}>
             <IconButton onClick={() => setFilterModalOpen(!filterModalOpen)}>
